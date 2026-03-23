@@ -11,7 +11,7 @@ so that the same universal wrapper can support heterogeneous environments such a
 
 - **Grid2Op**
 - **WNTR**
-- and, with additional adapters, future benchmarks such as PettingZoo, SMAC, Overcooked, MAPF, Flatland, and others.
+- and, with additional adapters, benchmarks such as PettingZoo, SMAC, Overcooked, MAPF, Flatland, and others.
 
 
 ## Motivation
