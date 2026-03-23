@@ -25,7 +25,7 @@ Distributed and multi-agent systems often operate under unreliable conditions:
 - actuators may fail
 - malicious or byzantine behavior may occur
 
-This repository addresses that problem by introducing a layered design:
+This repository facilitates evaluation of multi-agent systems under the above conditions by introducing a layered design:
 
 1. **`core.py`** implements generic fault and network logic
 2. **`adapter.py`** explains how a particular benchmark represents messages, actions, and observations
