@@ -1,0 +1,8 @@
+numpy
+pettingzoo
+gymnasium
+wntr
+pandas
+scipy
+networkx
+matplotlib
