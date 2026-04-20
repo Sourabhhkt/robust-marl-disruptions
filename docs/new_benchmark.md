@@ -90,11 +90,11 @@ If actions naturally include a separate message component, implement or configur
 
 ### Case 3: Generic dict-based multi-agent benchmark
 
-If your environment is already dict-based and you just want to append/attach messages to observations, `DictMAAdapter` may be enough.
+If your environment is already dict-based and you just want to append/attach messages to observations, `DictMAAdapter` is enough.
 
 ### Typical edits
 
-For a new benchmark, you would usually replace:
+For a new benchmark, replace:
 
 ```python
 adapter = make_grid2op_adapter(last_k=8)
