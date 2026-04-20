@@ -1,8 +1,8 @@
 # Guide to adapting `test_run.py` to a New Benchmark
 
-## Purpose of `test_run(1).py`
+## Purpose of `test_run.py`
 
-`test_run(1).py` is a minimal smoke test for the communication-fault framework. It does four things:
+`test_run.py` does four things:
 
 1. creates a benchmark environment,
 2. defines how communication is represented inside that benchmark,
@@ -15,11 +15,11 @@ In the current version, the benchmark is **Grid2Op**.
 
 ## What needs to change for a new benchmark?
 
-To support a new benchmark, need to think about **three layers**.
+To support a new benchmark, think about **two layers**.
 
 ## A. Environment layer: provide a normalized parallel API
 
-The wrapper expects the benchmark environment to expose something close to this interface:
+The wrapper expects the benchmark environment to have this interface:
 
 - `reset(seed=None, options=None) -> (obs_dict, infos_dict)`
 - `step(action_dict) -> (obs_dict, rewards_dict, terms_dict, truncs_dict, infos_dict)`
@@ -29,9 +29,9 @@ The wrapper expects the benchmark environment to expose something close to this 
 - `observation_space(agent)`
 - `close()`
 
-If your benchmark already has this interface, you may not need a shim.
+If the benchmark already has this interface, a shim is not needed.
 
-If it does not, create a small shim similar to `Grid2OpParallelEnv` that:
+If it does not have this interface, create a small shim similar to `Grid2OpParallelEnv` that:
 
 - converts the benchmark’s native reset/step format into dicts keyed by agent id,
 - defines agent names,
@@ -40,7 +40,7 @@ If it does not, create a small shim similar to `Grid2OpParallelEnv` that:
 
 ### Typical edits
 
-For a new benchmark, you would usually replace:
+For a new benchmark, the replacement is:
 
 ```python
 from env_shims import Grid2OpParallelEnv
@@ -60,7 +60,7 @@ env = MyBenchmarkParallelEnv(...)
 
 This is the most important benchmark-specific modification.
 
-You need to decide:
+Decide:
 
 1. **Who are the agents?**
 2. **What counts as the outgoing message?**
