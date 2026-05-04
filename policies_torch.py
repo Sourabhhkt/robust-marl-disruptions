@@ -5,7 +5,7 @@ from torch.distributions import Categorical
 
 class SharedActorCritic(nn.Module):
   def __init__(self, obs_dim, n_actions, hidden=128):
-    super.__init__()
+    super().__init__()
     self.body = nn.Sequential(
                   nn.Linear(obs_dim, hidden), nn.ReLU(),
                   nn.Linear(hidden, hidden), nn.ReLU(),
