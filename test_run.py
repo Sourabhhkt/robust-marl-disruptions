@@ -39,9 +39,31 @@ cfg = NetworkFaultConfig(seed=1, msg_drop_prob=0.1)
 wrapped = InstrumentedUniversalCommFaultWrapper(env, adapter, cfg)
 obs, infos = wrapped.reset(seed=123)
 
+import torch
+from policies_torch import SharedActorCritic
+
+sample_agent = wrapped.agents[0]
+obs_dim = len(np.asarray(obs[sample_agent]).reshape(-1))
+
+ACTION_SET = [
+    wrapped.action_space(sample_agent)({}),
+    wrapped.action_space(sample_agent).sample(),
+]
+
+n_actions = len(ACTION_SET)
+
+policy = SharedActorCritic(obs_dim, n_actions)
+policy.eval()
+
 while wrapped.agents:
-    actions = {a: wrapped.action_space(a).sample() for a in wrapped.agents}
+    actions = {}
+
+    for a in wrapped.agents:
+        idx, logp, value = policy.act(obs[a])
+        actions[a] = ACTION_SET[idx]
+
     obs, rewards, terms, truncs, infos = wrapped.step(actions)
+
     if (terms and all(terms.values())) or (truncs and all(truncs.values())):
         break
 
