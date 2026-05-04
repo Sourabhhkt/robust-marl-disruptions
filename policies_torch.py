@@ -14,7 +14,7 @@ class SharedActorCritic(nn.Module):
     self.critic = nn.Linear(hidden, 1)
 
   def act(self, obs):
-    x = torch.as_tensor(obs, d_type=torch.float32)
+    x = torch.as_tensor(obs, dtype=torch.float32)
     h = self.body(x)
     dist = Categorical(logits=self.actor(h))
     action = dist.sample()
