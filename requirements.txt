@@ -1,8 +1,22 @@
-numpy
-pettingzoo
-gymnasium
-wntr
+# Core dependencies — required for the synthetic benchmarks, the experiment
+# runner, metrics, and control-theoretic analysis. Everything in the M8 core
+# evidence path runs with only these.
+numpy<2
 pandas
+matplotlib
 scipy
 networkx
-matplotlib
+
+# --- Optional extras ---------------------------------------------------------
+# MARL benchmarks (PettingZoo MPE). On Python 3.9 the MPE environments live in
+# the separate `mpe2` package:
+#   pip install pettingzoo gymnasium mpe2
+#
+# Infrastructure benchmark (water networks). On Python 3.9 pin:
+#   pip install "wntr==1.3.2" "setuptools<80"
+#
+# Learned baselines (IPPO-lite, actor-critic):
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
+#
+# A fully pinned environment used for the M8 experiments is in
+# requirements-lock.txt.

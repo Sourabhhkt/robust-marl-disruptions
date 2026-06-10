@@ -149,14 +149,23 @@ class WNTRParallelEnv:
     def _run_one_interval(self):
         """
         Simulate one control interval.
+
+        EPANET writes intermediate temp files keyed by ``file_prefix``; when many
+        environments run in parallel processes they must not share that prefix or
+        the EPANET C library can crash on concurrent temp-file access. We give each
+        run a process- and instance-unique prefix inside the system temp dir.
         """
         self.wn.options.time.duration = self.control_interval_seconds
         self.wn.options.time.hydraulic_timestep = self.control_interval_seconds
         self.wn.options.time.report_timestep = self.control_interval_seconds
 
+        import os
+        import tempfile
+        prefix = os.path.join(tempfile.gettempdir(), f"wntr_{os.getpid()}_{id(self)}_{self._t}")
+
         try:
             sim = self.wntr.sim.EpanetSimulator(self.wn)
-            results = sim.run_sim()
+            results = sim.run_sim(file_prefix=prefix)
         except Exception:
             sim = self.wntr.sim.WNTRSimulator(self.wn)
             results = sim.run_sim()
@@ -273,76 +282,3 @@ class WNTRParallelEnv:
     def close(self):
         # WNTR does not usually need explicit closing.
         return None
-
-class Grid2OpParallelEnv:
-    def __init__(self, env_name="l2rpn_case14_sandbox", max_steps=100, **kwargs):
-        import grid2op
-
-        self.env = grid2op.make(env_name, **kwargs)
-        self.agent_ids = ["grid_operator"]
-        self._active_agents = list(self.agent_ids)
-        self.max_steps = int(max_steps)
-        self._step_count = 0
-
-    @property
-    def agents(self):
-        return self._active_agents
-
-    @property
-    def possible_agents(self):
-        return self.agent_ids
-
-    def action_space(self, agent):
-        return self.env.action_space
-
-    def observation_space(self, agent):
-        return None
-
-    def _obs_to_vec(self, obs):
-        try:
-            return np.asarray(obs.to_vect(), dtype=np.float32).reshape(-1)
-        except Exception:
-            return np.asarray(obs, dtype=np.float32).reshape(-1)
-
-    def reset(self, seed=None, options=None):
-        self._step_count = 0
-        self._active_agents = list(self.agent_ids)
-        try:
-            obs = self.env.reset(seed=seed, options=options)
-        except TypeError:
-            obs = self.env.reset()
-        return {"grid_operator": self._obs_to_vec(obs)}, {"grid_operator": {}}
-
-    def step(self, actions):
-        act = actions.get("grid_operator", self.env.action_space({}))
-        out = self.env.step(act)
-
-        if len(out) == 4:
-            obs, reward, done, info = out
-            truncated = False
-        else:
-            obs, reward, done, truncated, info = out
-
-        self._step_count += 1
-        if self._step_count >= self.max_steps:
-            truncated = True
-
-        if done or truncated:
-            self._active_agents = []
-        else:
-            self._active_agents = list(self.agent_ids)
-
-        return (
-            {"grid_operator": self._obs_to_vec(obs)},
-            {"grid_operator": float(reward)},
-            {"grid_operator": bool(done)},
-            {"grid_operator": bool(truncated)},
-            {"grid_operator": dict(info) if isinstance(info, dict) else {}},
-        )
-
-    def close(self):
-        try:
-            self.env.close()
-        except Exception:
-            pass
-

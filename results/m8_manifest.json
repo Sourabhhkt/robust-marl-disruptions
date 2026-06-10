@@ -1,0 +1,70 @@
+{
+  "name": "m8",
+  "packages": {
+    "python": "3.9.25",
+    "numpy": "1.26.4",
+    "pandas": "2.3.3",
+    "scipy": "1.13.1",
+    "networkx": "3.2.1",
+    "torch": "2.8.0+cpu",
+    "pettingzoo": "1.26.1",
+    "mpe2": "1.1.0",
+    "wntr": "1.3.2",
+    "gymnasium": "1.1.1"
+  },
+  "n_raw_rows": 4040,
+  "families": [
+    "actuator",
+    "bandwidth",
+    "byzantine",
+    "crash",
+    "jam",
+    "jitter",
+    "latency",
+    "msg_drop",
+    "partition",
+    "sensor_noise",
+    "spoof"
+  ],
+  "tasks": [
+    "consensus_mean",
+    "consensus_median",
+    "consensus_trimmed",
+    "dcop_dsa",
+    "dcop_minsum",
+    "flocking_mean",
+    "formation_mean",
+    "formation_median",
+    "mpe_simple_reference",
+    "mpe_simple_spread",
+    "mpe_speaker_listener",
+    "rendezvous_mean",
+    "wntr_random",
+    "wntr_rule"
+  ],
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "seeds_used": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "wall_clock_sec": 198.0
+}

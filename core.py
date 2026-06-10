@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Callable, Dict, Optional, Sequence, Set, Tuple
 import numpy as np
 
@@ -30,8 +30,21 @@ def quantize_uniform(x: np.ndarray, bits: int, clip: Tuple[float, float]) -> np.
     return lo + q * (hi - lo) / levels
 
 
+def _spawn_rng(seed: int, child: int, n_children: int = 2) -> np.random.Generator:
+    """
+    Build an independent random stream from a base seed.
+
+    The communication channel and the agent fault model must use *independent*
+    streams so that, e.g., a message-drop sweep and a crash sweep do not share
+    correlated random draws. ``SeedSequence(seed).spawn(n)`` yields ``n``
+    statistically independent child sequences; ``child`` selects which one.
+    """
+    children = np.random.SeedSequence(int(seed)).spawn(int(n_children))
+    return np.random.default_rng(children[int(child)])
+
+
 # ============================================================
-# Config: channel + faults (very close to your PettingZoo cfg)
+# Config: channel + faults
 # ============================================================
 @dataclass
 class NetworkFaultConfig:
@@ -64,8 +77,13 @@ class NetworkFaultConfig:
     spoof_prob: float = 0.0
     spoof_scale: float = 1.0
 
-    # Replay: deliver an older deliverable msg without popping it (or pick random deliverable)
+    # Replay: re-deliver an older deliverable msg without popping it
     replay_prob: float = 0.0
+
+    # Safety bound on per-receiver queue length (prevents unbounded growth
+    # under heavy latency/partition where messages accumulate). Oldest are
+    # dropped first when the bound is exceeded.
+    max_queue_len: int = 4096
 
     # -----------------------
     # Fault model (agents)
@@ -84,6 +102,21 @@ class NetworkFaultConfig:
     byzantine_action_prob: float = 0.0
 
 
+# Possible per-receive statuses returned in recv() metadata.
+RECV_STATUSES = (
+    "none",        # no deliverable message in queue
+    "delivered",   # a fresh message was delivered
+    "replayed",    # an old (already-delivered) message was re-delivered
+    "spoofed",     # delivered payload was replaced by adversarial noise
+    "dropped",     # message was popped then lost (packet loss)
+    "jammed",      # message popped then lost due to jamming
+    "partitioned", # receiver isolated; no delivery this step
+    "stale",       # message exceeded its time-to-live
+)
+# Statuses for which a (nonzero) real payload reaches the receiver.
+DELIVERED_STATUSES = ("delivered", "replayed", "spoofed")
+
+
 # ============================================================
 # Core 1: NetworkChannel (benchmark-agnostic)
 # ============================================================
@@ -96,17 +129,26 @@ class NetworkChannel:
         channel.reset(agents)
 
         channel.send(src, dst, payload, t, agents=agents)
-        msg = channel.recv(dst, t, dim=msg_dim, agents=agents)
+        msg, meta = channel.recv(dst, t, dim=msg_dim, agents=agents)
+
+    ``recv`` returns ``(payload, meta)`` where ``meta`` carries:
+        - status:      one of RECV_STATUSES
+        - age:         integer message age (t - creation_time), 0 if none
+        - src_payload: the payload as sent by the source (pre-impairment),
+                       or None if no message was delivered. This enables a
+                       *sender-anchored* distortion metric (compare what was
+                       delivered against what was actually sent).
     """
+
     def __init__(self, cfg: NetworkFaultConfig):
         self.cfg = cfg
-        self.rng = np.random.default_rng(cfg.seed)
+        self.rng = _spawn_rng(cfg.seed, child=0)
         self._q: Dict[str, list[tuple[int, int, np.ndarray]]] = {}  # dst -> [(deliver_t, created_t, payload)]
         self._agents_cache: list[str] = []
 
     def reset(self, agents: Optional[Sequence[str]] = None, seed: Optional[int] = None):
-        if seed is not None:
-            self.rng = np.random.default_rng(seed)
+        base_seed = self.cfg.seed if seed is None else seed
+        self.rng = _spawn_rng(base_seed, child=0)
         self._q.clear()
         self._agents_cache = list(agents) if agents is not None else []
 
@@ -167,9 +209,7 @@ class NetworkChannel:
         self._ensure_agent(dst)
         payload = np.asarray(payload, dtype=float).copy()
 
-        # Optional: corrupt outgoing payload if src is byzantine (if you want it here).
-        # Many people prefer doing byzantine comm in the wrapper before calling send(),
-        # but this hook lets you keep it centralized if you want.
+        # Optionally corrupt outgoing payload if src is byzantine.
         if allow_byzantine_corrupt and (self.cfg.byzantine_agents is not None) and (src in self.cfg.byzantine_agents):
             if self.cfg.byzantine_comm_corrupt_prob > 0 and (self.rng.random() < self.cfg.byzantine_comm_corrupt_prob):
                 payload = self.rng.normal(0.0, self.cfg.spoof_scale, size=payload.shape).astype(float)
@@ -178,15 +218,20 @@ class NetworkChannel:
         ct = t
 
         q = self._q[dst]
-        q.append((dt, ct, payload))
+        q.append((dt, ct, src, payload))
 
         # duplication
         if self.cfg.msg_duplicate_prob > 0 and (self.rng.random() < self.cfg.msg_duplicate_prob):
-            q.append((dt, ct, payload.copy()))
+            q.append((dt, ct, src, payload.copy()))
 
-        # reordering (local swap)
+        # reordering (local swap of the two most recent enqueues)
         if self.cfg.msg_reorder_prob > 0 and len(q) >= 2 and (self.rng.random() < self.cfg.msg_reorder_prob):
             q[-1], q[-2] = q[-2], q[-1]
+
+        # bound queue growth (drop oldest first)
+        max_len = int(self.cfg.max_queue_len)
+        if max_len > 0 and len(q) > max_len:
+            del q[: len(q) - max_len]
 
     def recv(
         self,
@@ -194,58 +239,76 @@ class NetworkChannel:
         t: int,
         dim: int,
         agents: Optional[Sequence[str]] = None,
-    ) -> np.ndarray:
+    ) -> Tuple[np.ndarray, Dict[str, Any]]:
         """
-        Deliver a message to receiver at time t:
-          - partitions/jamming/drop
-          - FIFO deliver earliest deliverable, or replay attack
-          - TTL stale drop
-          - spoofing
-          - bandwidth caps
-        Returns a vector of shape (dim,).
+        Deliver a message to ``receiver`` at time ``t``. Returns ``(payload, meta)``.
+
+        Delivery model (receiver side):
+          1. If the receiver is partitioned, nothing is delivered and queued
+             messages are retained (they may arrive once the partition heals).
+          2. Otherwise the earliest deliverable message is *popped* (FIFO on
+             deliver-time). A replay attack instead *peeks* a random deliverable
+             message without removing it.
+          3. The popped message may then be lost to jamming, base drop, or TTL
+             expiry. Crucially, a lost message is *consumed* (popped), so a
+             "drop" is distinct from "no message" and queues cannot grow under
+             pure packet loss.
+          4. A surviving message may be spoofed (replaced by noise), then is
+             dimension-matched and bandwidth-capped.
         """
         self._ensure_agent(receiver)
         agents_list = list(agents) if agents is not None else (self._agents_cache if self._agents_cache else [receiver])
 
-        # partitions
+        zeros = np.zeros((dim,), dtype=float)
+
+        # (1) partition: cannot receive; do not consume queued messages.
         if self._is_partitioned(t, receiver, agents_list):
-            return np.zeros((dim,), dtype=float)
-
-        # jamming
-        if self._is_jammed(t, receiver, agents_list):
-            if self.rng.random() < self.cfg.jam_drop_prob:
-                return np.zeros((dim,), dtype=float)
-
-        # base drop
-        if self.cfg.msg_drop_prob > 0 and (self.rng.random() < self.cfg.msg_drop_prob):
-            return np.zeros((dim,), dtype=float)
+            return zeros, {"status": "partitioned", "age": 0, "src_payload": None}
 
         q = self._q[receiver]
-        deliverable_idx = [i for i, (dt, _, _) in enumerate(q) if dt <= t]
+        deliverable_idx = [i for i, (dt, _, _, _) in enumerate(q) if dt <= t]
         if not deliverable_idx:
-            return np.zeros((dim,), dtype=float)
+            return zeros, {"status": "none", "age": 0, "src_payload": None}
 
-        # replay: pick a deliverable message but do not remove (or just pick random deliverable)
+        # (2) select message: replay peeks, normal delivery pops.
+        replayed = False
         if self.cfg.replay_prob > 0 and (self.rng.random() < self.cfg.replay_prob):
             pick = int(self.rng.choice(deliverable_idx))
-            dt, ct, payload = q[pick]
+            dt, ct, src, payload = q[pick]
+            replayed = True
         else:
-            # FIFO on deliver_time among deliverables
             pick = min(deliverable_idx, key=lambda i: q[i][0])
-            dt, ct, payload = q.pop(pick)
+            dt, ct, src, payload = q.pop(pick)
 
-        # TTL (stale)
-        if self.cfg.ttl_steps is not None:
-            if (t - ct) > int(self.cfg.ttl_steps):
-                return np.zeros((dim,), dtype=float)
+        # (3-4) channel losses, spoofing, dim, bandwidth.
+        return self._finalize_delivery(payload, ct, t, dim, receiver, agents_list, replayed=replayed)
 
-        # spoofing
+    def _finalize_delivery(self, payload, ct, t, dim, receiver, agents_list, replayed=False):
+        """Apply jam/drop/TTL/spoof/dim/bandwidth to one popped message."""
+        zeros = np.zeros((dim,), dtype=float)
+        src_payload = np.asarray(payload, dtype=float).copy()
+        age = int(max(0, t - ct))
+        meta: Dict[str, Any] = {"status": "none", "age": age, "src_payload": src_payload}
+
+        if self._is_jammed(t, receiver, agents_list) and (self.rng.random() < self.cfg.jam_drop_prob):
+            meta["status"] = "jammed"
+            return zeros, meta
+
+        if self.cfg.msg_drop_prob > 0 and (self.rng.random() < self.cfg.msg_drop_prob):
+            meta["status"] = "dropped"
+            return zeros, meta
+
+        if self.cfg.ttl_steps is not None and age > int(self.cfg.ttl_steps):
+            meta["status"] = "stale"
+            return zeros, meta
+
         if self.cfg.spoof_prob > 0 and (self.rng.random() < self.cfg.spoof_prob):
             payload = self.rng.normal(loc=0.0, scale=self.cfg.spoof_scale, size=(dim,)).astype(float)
+            meta["status"] = "spoofed"
         else:
             payload = np.asarray(payload, dtype=float)
+            meta["status"] = "replayed" if replayed else "delivered"
 
-        # force dim (pad/trim)
         if payload.shape[0] < dim:
             out = np.zeros((dim,), dtype=float)
             out[: payload.shape[0]] = payload
@@ -253,9 +316,46 @@ class NetworkChannel:
         elif payload.shape[0] > dim:
             payload = payload[:dim]
 
-        # bandwidth caps applied after delivery
         payload = self._apply_bandwidth_cap(payload)
-        return payload.astype(float, copy=False)
+        return payload.astype(float, copy=False), meta
+
+    def recv_all(
+        self,
+        receiver: str,
+        t: int,
+        dim: int,
+        agents: Optional[Sequence[str]] = None,
+    ) -> Dict[str, Tuple[np.ndarray, Dict[str, Any]]]:
+        """
+        Deliver the freshest deliverable message *from each source*.
+
+        Returns ``{src: (payload, meta)}``. Unlike :meth:`recv` (which returns a
+        single message), this drains all currently-deliverable messages, keeping
+        only the newest per source, and applies channel impairments independently
+        per source. This supports genuine multi-neighbor message passing
+        (consensus, formation, DCOP). Partitioned receivers get an empty result.
+        """
+        self._ensure_agent(receiver)
+        agents_list = list(agents) if agents is not None else (self._agents_cache if self._agents_cache else [receiver])
+
+        if self._is_partitioned(t, receiver, agents_list):
+            return {}
+
+        q = self._q[receiver]
+        # keep latest (max created_t) deliverable message per source
+        latest: Dict[str, tuple] = {}
+        for (dt, ct, src, payload) in q:
+            if dt <= t:
+                if (src not in latest) or (ct > latest[src][1]):
+                    latest[src] = (dt, ct, src, payload)
+
+        # consume all deliverable messages (keep only not-yet-deliverable)
+        self._q[receiver] = [e for e in q if e[0] > t]
+
+        out: Dict[str, Tuple[np.ndarray, Dict[str, Any]]] = {}
+        for src, (dt, ct, _src, payload) in latest.items():
+            out[src] = self._finalize_delivery(payload, ct, t, dim, receiver, agents_list, replayed=False)
+        return out
 
 
 # ============================================================
@@ -266,23 +366,30 @@ class FaultModel:
     Benchmark-agnostic agent faults:
       - crash-stop / intermittent availability
       - sensor noise on numpy-like observations
-      - actuator faults on generic actions (supports:
-            * discrete ints (noop=0)
-            * numpy actions
-            * fallback: use action_sampler if provided)
+      - actuator faults on generic actions (discrete ints, numpy actions, or
+        a provided action sampler)
       - byzantine action overriding (random action)
+
+    Crash *onset* is sampled at most once per (agent, timestep): both
+    ``transform_observation`` and ``transform_action`` may be called within the
+    same step, but only the first call for a given ``t`` samples a new crash.
+    This keeps the effective crash probability equal to ``cfg.crash_prob`` and
+    keeps the RNG stream reproducible regardless of call order.
     """
+
     def __init__(self, cfg: NetworkFaultConfig):
         self.cfg = cfg
-        self.rng = np.random.default_rng(cfg.seed)
+        self.rng = _spawn_rng(cfg.seed, child=1)
         self._crash_until: Dict[str, int] = {}
         self._last_action: Dict[str, Any] = {}
+        self._last_crash_sample_t: Dict[str, int] = {}
 
     def reset(self, agents: Optional[Sequence[str]] = None, seed: Optional[int] = None):
-        if seed is not None:
-            self.rng = np.random.default_rng(seed)
+        base_seed = self.cfg.seed if seed is None else seed
+        self.rng = _spawn_rng(base_seed, child=1)
         self._crash_until.clear()
         self._last_action.clear()
+        self._last_crash_sample_t.clear()
         if agents is not None:
             for a in agents:
                 self._crash_until[a] = -1
@@ -290,7 +397,24 @@ class FaultModel:
     def _is_crashed(self, agent: str, t: int) -> bool:
         return t < self._crash_until.get(agent, -1)
 
+    def begin_step(self, agents: Sequence[str], t: int) -> None:
+        """Sample crash onset once for every agent at the start of step ``t``.
+
+        Convenience for harnesses (e.g. the synthetic envs) that drive crash
+        state directly rather than through transform_observation/action."""
+        for a in agents:
+            self._maybe_start_crash(a, t)
+
+    def is_crashed(self, agent: str, t: int) -> bool:
+        """Public query: is ``agent`` currently in a crashed state at time ``t``?"""
+        return self._is_crashed(agent, t)
+
     def _maybe_start_crash(self, agent: str, t: int):
+        # Sample crash onset at most once per (agent, t).
+        if self._last_crash_sample_t.get(agent) == t:
+            return
+        self._last_crash_sample_t[agent] = t
+
         if self._is_crashed(agent, t):
             return
         if self.cfg.crash_prob > 0 and (self.rng.random() < self.cfg.crash_prob):

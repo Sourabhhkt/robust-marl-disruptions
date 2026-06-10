@@ -1,25 +1,17 @@
-# Guide to adapting `test_run.py` to a New Benchmark
+# Guide to adding a new benchmark
 
-## Purpose of `test_run.py`
-
-`test_run.py` does four things:
-
-1. creates a benchmark environment,
-2. defines how communication is represented inside that benchmark,
-3. wraps the environment with a generic communication-fault layer, and
-4. runs a short random-action rollout while collecting instrumentation logs.
-
-In the current version, the benchmark is **Grid2Op**.
+Adding a benchmark to the suite means wiring it through the same three layers the
+rest of the code uses (see `architecture.md`): an environment shim, a
+communication adapter, and (optionally) a task entry in the experiment runner.
+Two existing benchmarks are good references: `WNTRParallelEnv` in `env_shims.py`
+(a wrapped real simulator) and the synthetic environments in `synth_envs.py`
+(communication-native tasks).
 
 ---
 
-## What needs to change for a new benchmark?
-
-To support a new benchmark, think about **two layers**.
-
 ## A. Environment layer: provide a normalized parallel API
 
-The wrapper expects the benchmark environment to have this interface:
+The wrapper expects the benchmark environment to expose this interface:
 
 - `reset(seed=None, options=None) -> (obs_dict, infos_dict)`
 - `step(action_dict) -> (obs_dict, rewards_dict, terms_dict, truncs_dict, infos_dict)`
@@ -29,93 +21,58 @@ The wrapper expects the benchmark environment to have this interface:
 - `observation_space(agent)`
 - `close()`
 
-If the benchmark already has this interface, a shim is not needed.
+If the benchmark already has this interface (for example a PettingZoo
+`parallel_env`), no shim is needed. Otherwise, create a small shim like
+`WNTRParallelEnv` that:
 
-If it does not have this interface, create a small shim similar to `Grid2OpParallelEnv` that:
-
-- converts the benchmark’s native reset/step format into dicts keyed by agent id,
-- defines agent names,
-- maps action spaces, and
+- converts the benchmark's native reset/step format into dicts keyed by agent id,
+- defines the agent names,
+- maps the action spaces, and
 - converts observations into a representation your adapter can process.
-
-### Typical edits
-
-For a new benchmark, the replacement is:
-
-```python
-from env_shims import Grid2OpParallelEnv
-env = Grid2OpParallelEnv(...)
-```
-
-with something like:
-
-```python
-from env_shims import MyBenchmarkParallelEnv
-env = MyBenchmarkParallelEnv(...)
-```
 
 ---
 
 ## B. Communication layer: define an adapter
 
-This is the most important benchmark-specific modification.
+This is the most important benchmark-specific decision. Answer:
 
-Decide:
-
-1. **Who are the agents?**
-2. **What counts as the outgoing message?**
-3. **Where does the incoming message get inserted?**
-4. **What is the message dimension?**
-5. **Does the benchmark use explicit messages or implicit observation-state communication?**
+1. Who are the agents?
+2. What counts as the outgoing message?
+3. Where does the incoming message get inserted?
+4. What is the message dimension?
+5. Does the benchmark use explicit messages or implicit observation-slice
+   communication?
 
 ### Case 1: Observation-slice communication
-
-If the new benchmark represents communication as part of the observation/state vector, use `ObsSliceCommAdapter` (or a subclass like the current Grid2Op adapter).
-
-You must define:
-
-- `agents_list_fn(env)`
-- `slice_fn(obs)`
-- `replace_fn(obs, msg)`
-
-This is enough when the message is a slice of the observation.
+If communication is part of the observation/state vector, use
+`ObsSliceCommAdapter` and define `agents_list_fn(env)`, `slice_fn(obs)`, and
+`replace_fn(obs, msg)`. This is how WNTR and the wrapped MPE benchmarks are
+handled.
 
 ### Case 2: Explicit messages
-
-If actions naturally include a separate message component, implement or configure an adapter that:
-
-- gets `(env_action, msg_out)`,
-- returns the explicit message through `extract_outgoing_message(...)`, and
-- injects the received message appropriately.
+If the action naturally includes a separate message component, configure an
+adapter that receives `(env_action, msg_out)`, returns the explicit message via
+`extract_outgoing_message(...)`, and injects the received message appropriately.
 
 ### Case 3: Generic dict-based multi-agent benchmark
+If the environment is already dict-based and you only want to attach messages to
+observations, `DictMAAdapter` is enough.
 
-If your environment is already dict-based and you just want to append/attach messages to observations, `DictMAAdapter` is enough.
-
-### Typical edits
-
-For a new benchmark, replace:
+### Example (observation-slice, as used for WNTR)
 
 ```python
-adapter = make_grid2op_adapter(last_k=8)
-```
+import numpy as np
+from adapter import ObsSliceCommAdapter
 
-with either:
-
-- a new adapter factory, or
-- a direct adapter instance for the new benchmark.
-
-For example:
-
-```python
-def make_my_benchmark_adapter():
+def make_my_adapter(last_k=8):
     def slice_fn(obs):
         arr = np.asarray(obs, dtype=float).reshape(-1)
-        return arr[10:18]
+        return arr[-last_k:]
 
     def replace_fn(obs, msg):
         arr = np.asarray(obs, dtype=float).copy().reshape(-1)
-        arr[10:18] = msg
+        k = min(msg.shape[0], arr.shape[0])
+        arr[-k:] = msg[:k]
         return arr
 
     return ObsSliceCommAdapter(
@@ -127,24 +84,35 @@ def make_my_benchmark_adapter():
 
 ---
 
-## Minimal checklist for adding a new benchmark
+## C. Optional: register a task for the experiment runner
 
-1. **Create or reuse an environment shim** so the benchmark exposes dict-based multi-agent reset/step behavior.
-2. **Create an adapter** that defines the message interface.
-3. **Instantiate `NetworkFaultConfig`** with the impairments you want.
-4. **Wrap the environment** with `InstrumentedUniversalCommFaultWrapper`.
-5. **Run a short rollout** and inspect `wrapped.logs`.
+To include the benchmark in sweeps and figures, add a `run_*` function and an
+entry to the `TASKS` registry in `baselines.py`. A task is
+`run(cfg, seed, **env_overrides) -> record`, where `record` is a flat dict of
+scalars (the runner aggregates these across seeds). The `_run_wrapped` helper in
+`baselines.py` already drives a wrapped env with a policy and returns the
+communication metrics; follow `run_wntr` as a template. Once registered, the
+benchmark can be swept with `runner.run_sweep` and plotted with `analysis.py`.
 
 ---
 
-## Practical template for a new benchmark
+## Minimal checklist
+
+1. Create or reuse an environment shim with the dict-based parallel API above.
+2. Create an adapter that defines the message interface.
+3. (For sweeps) add a `run_*` task and a `TASKS` entry in `baselines.py`.
+4. Otherwise, wrap the env directly and run a short rollout to inspect metrics.
+
+---
+
+## Standalone template (wrap and roll out directly)
 
 ```python
+import numpy as np
 from core import NetworkFaultConfig
 from wrapper import InstrumentedUniversalCommFaultWrapper
 from adapter import ObsSliceCommAdapter  # or DictMAAdapter / custom adapter
-from env_shims import MyBenchmarkParallelEnv
-
+from env_shims import WNTRParallelEnv     # or your own shim
 
 def make_my_adapter():
     def slice_fn(obs):
@@ -162,8 +130,7 @@ def make_my_adapter():
         replace_fn=replace_fn,
     )
 
-
-env = MyBenchmarkParallelEnv(...)
+env = WNTRParallelEnv("Net3.inp", horizon_steps=24)
 adapter = make_my_adapter()
 cfg = NetworkFaultConfig(seed=1, msg_drop_prob=0.1)
 
@@ -176,7 +143,6 @@ while wrapped.agents:
     if (terms and all(terms.values())) or (truncs and all(truncs.values())):
         break
 
-print(wrapped.logs)
+print(wrapped.metrics())
 wrapped.close()
 ```
-

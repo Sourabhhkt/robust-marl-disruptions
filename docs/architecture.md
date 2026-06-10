@@ -24,7 +24,7 @@ The codebase is split into four layers:
 4. **`wrapper.py`**  
    Universal orchestration layer
 
-Together, these layers let a single wrapper apply the same network and fault model to environments such as Grid2Op and WNTR, even though those environments represent actions, observations, and communication differently.
+Together, these layers let a single wrapper apply the same network and fault model to environments such as WNTR and PettingZoo MPE, even though those environments represent actions, observations, and communication differently.
 
 ---
 
@@ -46,7 +46,7 @@ This separation keeps the system modular and easier to extend.
 `core.py` contains the benchmark-independent disruption engine.
 
 It should not need to know whether the benchmark is:
-- Grid2Op
+- a synthetic communication-native environment (consensus, formation, DCOP, ...)
 - WNTR
 - PettingZoo
 - SMAC

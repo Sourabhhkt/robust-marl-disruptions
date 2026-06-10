@@ -1,33 +1,67 @@
-# Universal Communication-Fault Wrapper for RL Benchmarks
+# Constraint-Aware MAS/DPS Benchmark & Stress-Test Suite
 
-This repository provides a **benchmark-agnostic framework** for injecting **communication disruptions** and **agent-level faults** into reinforcement learning (RL) and multi-agent reinforcement learning (MARL) benchmarks.
+A benchmark-agnostic framework for evaluating multi-agent systems (MAS) and
+distributed problem-solving (DPS) algorithms under communication disruptions,
+agent faults, and adversarial interference - with control-theoretic metrics
+(Lyapunov stability, consensus convergence rate, information-theoretic
+rate-distortion).
 
-The main goal is to separate:
+An earlier version provided the wrapper-based augmentation framework; this
+version adds a hardened harness, communication-native synthetic benchmarks,
+baseline algorithms, and the empirical + control-theoretic stress-test study.
 
-- **generic disruption logic** from
-- **benchmark-specific translation logic**
+## Layered design
 
-so that the same universal wrapper can support heterogeneous environments such as:
+| Layer | File | Role |
+|-------|------|------|
+| Disruption engine | core.py | NetworkFaultConfig, NetworkChannel (drop/latency/jitter/bandwidth/spoof/jam/partition/replay/TTL + per-source recv_all), FaultModel (crash/sensor-noise/actuator/Byzantine) |
+| Translation | adapter.py | Benchmark-specific message/observation/action mapping (ObsSliceCommAdapter, DictMAAdapter) |
+| Normalization | env_shims.py | WNTRParallelEnv (dict-based parallel API) |
+| Orchestration | wrapper.py | InstrumentedUniversalCommFaultWrapper - drives env/adapter/faults, sender-anchored comm metrics |
+| Comm-native benchmarks | synth_envs.py | consensus / rendezvous / formation / flocking (linear_consensus_rollout), DCOP graph-colouring (dcop_rollout: min-sum, DSA) |
+| Algorithms | baselines.py | aggregators (mean/median/trimmed), MPE scripted policies, WNTR controller, task registry |
+| Metrics | metrics.py | CommLogger + control-theoretic functions (disagreement/Lyapunov, convergence rate, lambda_2, IAE/ISE, rate-distortion) |
+| Experiment runner | runner.py | perturbation sweeps, multi-seed 25/50/75 aggregation, CSV + JSON manifest, multiprocessing |
+| Figures/analysis | analysis.py | degradation curves, rate-distortion, Lyapunov trajectories, scalability |
+| M8 driver | run_m8.py | runs the full matrix and regenerates all report figures |
+| Experimental adapters | contrib/adapter_experimental.py | UNVALIDATED scaffolding (SMAC/Flatland/Overcooked/MAPF/RoboCup/FRODO) |
 
-- **Grid2Op**
-- **WNTR**
-- and, with additional adapters, benchmarks such as PettingZoo, SMAC, Overcooked, MAPF, Flatland, and others.
+## Install
 
+```bash
+python3 -m venv .venv && . .venv/bin/activate
+pip install -r requirements.txt                 # core (numpy<2, pandas, matplotlib, scipy, networkx)
+# optional extras (Python 3.9 pins):
+pip install pettingzoo gymnasium mpe2            # MPE benchmarks
+pip install "wntr==1.3.2" "setuptools<80"        # water-network benchmark
+pip install torch --index-url https://download.pytorch.org/whl/cpu
+```
+A fully pinned environment is in requirements-lock.txt.
 
-## Motivation
+## Reproduce the Milestone 8 results
 
-Distributed and multi-agent systems often operate under unreliable conditions:
+```bash
+python run_m8.py --seeds 10 --workers 12 --outdir results --figdir figures
+```
+This writes per-episode rows (results/m8_raw.csv), the aggregated summary
+(results/m8_summary.csv), a reproducibility manifest (results/m8_manifest.json),
+and all figures (figures/) used by the Milestone 8 report.
 
-- messages can be delayed or dropped
-- communication may be quantized or bandwidth-limited
-- agents may crash temporarily
-- observations may become noisy
-- actuators may fail
-- malicious or byzantine behavior may occur
+Run the tests:
+```bash
+python tests/test_core.py && python tests/test_metrics.py
+```
 
-This repository facilitates evaluation of multi-agent systems under the above conditions by introducing a layered design:
+## Quick example
 
-1. **`core.py`** implements generic fault and network logic
-2. **`adapter.py`** explains how a particular benchmark represents messages, actions, and observations
-3. **`env_shims.py`** normalizes benchmark APIs into a common dict-based interface
-4. **`wrapper.py`** orchestrates the interaction between the environment, the adapter, and the fault logic
+```python
+from core import NetworkFaultConfig
+from baselines import run_task
+
+cfg = NetworkFaultConfig(seed=0, msg_drop_prob=0.5)
+rec = run_task("consensus_mean", cfg, seed=0)
+print(rec["final_disagreement"], rec["lyap_rho"], rec["delivery_rate"])
+```
+
+See docs/ for the architecture, fault models, adapters, and how to add a new
+benchmark.
