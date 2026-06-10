@@ -2,13 +2,14 @@
 
 A benchmark-agnostic framework for evaluating multi-agent systems (MAS) and
 distributed problem-solving (DPS) algorithms under communication disruptions,
-agent faults, and adversarial interference - with control-theoretic metrics
+agent faults, and adversarial interference, with control-theoretic metrics
 (Lyapunov stability, consensus convergence rate, information-theoretic
 rate-distortion).
 
-An earlier version provided the wrapper-based augmentation framework; this
-version adds a hardened harness, communication-native synthetic benchmarks,
-baseline algorithms, and the empirical + control-theoretic stress-test study.
+This framework provides a hardened evaluation harness, communication-native
+synthetic benchmarks, baseline coordination algorithms, and an empirical plus
+control-theoretic stress-test study. Written reports are maintained separately and
+are not part of this public code release.
 
 ## Layered design
 
@@ -23,7 +24,7 @@ baseline algorithms, and the empirical + control-theoretic stress-test study.
 | Metrics | metrics.py | CommLogger + control-theoretic functions (disagreement/Lyapunov, convergence rate, lambda_2, IAE/ISE, rate-distortion) |
 | Experiment runner | runner.py | perturbation sweeps, multi-seed 25/50/75 aggregation, CSV + JSON manifest, multiprocessing |
 | Figures/analysis | analysis.py | degradation curves, rate-distortion, Lyapunov trajectories, scalability |
-| M8 driver | run_m8.py | runs the full matrix and regenerates all report figures |
+| Experiment driver | run_m8.py | runs the full matrix and regenerates all figures |
 | Experimental adapters | contrib/adapter_experimental.py | UNVALIDATED scaffolding (SMAC/Flatland/Overcooked/MAPF/RoboCup/FRODO) |
 
 ## Install
@@ -38,14 +39,14 @@ pip install torch --index-url https://download.pytorch.org/whl/cpu
 ```
 A fully pinned environment is in requirements-lock.txt.
 
-## Reproduce the Milestone 8 results
+## Reproduce the results
 
 ```bash
 python run_m8.py --seeds 10 --workers 12 --outdir results --figdir figures
 ```
 This writes per-episode rows (results/m8_raw.csv), the aggregated summary
 (results/m8_summary.csv), a reproducibility manifest (results/m8_manifest.json),
-and all figures (figures/) used by the Milestone 8 report.
+and all figures (figures/).
 
 Run the tests:
 ```bash
