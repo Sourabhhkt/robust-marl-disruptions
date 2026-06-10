@@ -6,10 +6,11 @@ agent faults, and adversarial interference, with control-theoretic metrics
 (Lyapunov stability, consensus convergence rate, information-theoretic
 rate-distortion).
 
-This framework provides a hardened evaluation harness, communication-native
-synthetic benchmarks, baseline coordination algorithms, and an empirical plus
-control-theoretic stress-test study. Written reports are maintained separately and
-are not part of this public code release.
+An earlier version provided the wrapper-based augmentation framework; this
+version adds a hardened harness, communication-native synthetic benchmarks,
+baseline algorithms, and the empirical + control-theoretic stress-test study.
+Written reports are maintained separately and are not part of this public
+code release.
 
 ## Layered design
 
@@ -35,7 +36,8 @@ pip install -r requirements.txt                 # core (numpy<2, pandas, matplot
 # optional extras (Python 3.9 pins):
 pip install pettingzoo gymnasium mpe2            # MPE benchmarks
 pip install "wntr==1.3.2" "setuptools<80"        # water-network benchmark
-pip install torch --index-url https://download.pytorch.org/whl/cpu
+# torch is only needed for planned (not yet released) learned baselines:
+# pip install torch --index-url https://download.pytorch.org/whl/cpu
 ```
 A fully pinned environment is in requirements-lock.txt.
 

@@ -180,7 +180,17 @@ def make_scalability(figdir, seeds):
                                    os.path.join(figdir, "scal_finaldis_drop.png"),
                                    ylabel="final disagreement V(T)", logy=True,
                                    title="Final disagreement vs n (ring, 30% loss)"))
-    return [f for f in figs if f], df_clean, df_drop
+    # Denser graph (ring + random chords): expected degree grows with n, so the
+    # algebraic connectivity rises rather than collapses and coordination scales
+    # gracefully. This shows the ring result is a worst-case-connectivity case.
+    dense = dict(topology="ring_plus", p_extra=0.15)
+    df_dense = A.scalability_sweep("consensus_mean", ns=[10, 20, 40, 80, 160], seeds=seeds,
+                                   extra_kw=dense)
+    figs.append(A.plot_scalability(df_dense, "nominal_lambda2",
+                                   os.path.join(figdir, "scal_dense_lambda2.png"),
+                                   ylabel=r"algebraic connectivity $\lambda_2$", logy=True,
+                                   title="Connectivity vs n (ring + random chords)"))
+    return [f for f in figs if f], df_clean, df_drop, df_dense
 
 
 if __name__ == "__main__":
@@ -194,7 +204,8 @@ if __name__ == "__main__":
     seeds = list(range(args.seeds))
     raw, summary = run_matrix(seeds, args.workers, args.outdir)
     figs = make_figures(summary, args.figdir, seeds)
-    scal_figs, df_clean, df_drop = make_scalability(args.figdir, seeds)
+    scal_figs, df_clean, df_drop, df_dense = make_scalability(args.figdir, seeds)
     df_clean.to_csv(os.path.join(args.outdir, "m8_scalability_clean.csv"), index=False)
     df_drop.to_csv(os.path.join(args.outdir, "m8_scalability_drop.csv"), index=False)
+    df_dense.to_csv(os.path.join(args.outdir, "m8_scalability_dense.csv"), index=False)
     print(f"generated {len(figs)+len(scal_figs)} figures in {args.figdir}/")

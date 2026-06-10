@@ -15,8 +15,8 @@ networkx
 # Infrastructure benchmark (water networks). On Python 3.9 pin:
 #   pip install "wntr==1.3.2" "setuptools<80"
 #
-# Learned baselines (IPPO-lite, actor-critic):
+# Planned (not used by the current release) learned baselines would additionally need:
 #   pip install torch --index-url https://download.pytorch.org/whl/cpu
 #
-# A fully pinned environment used for the M8 experiments is in
+# A fully pinned environment used for the released experiments is in
 # requirements-lock.txt.
