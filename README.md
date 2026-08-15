@@ -28,6 +28,26 @@ code release.
 | Experiment driver | run_m8.py | runs the full matrix and regenerates all figures |
 | Experimental adapters | contrib/adapter_experimental.py | UNVALIDATED scaffolding (SMAC/Flatland/Overcooked/MAPF/RoboCup/FRODO) |
 
+### Milestone 9 additions (advanced coordination + physical infrastructure)
+
+| Layer | File | Role |
+|-------|------|------|
+| Advanced coordinators | coordinators.py | oracle, graph-attention GNN aggregator, reward-redistribution RECO policy (torch), hybrid MAS+DPS (clustering + event-triggered messaging); strategy registry |
+| Heterogeneous teams | hetero.py | per-agent profiles (gain, link reliability, message precision, role) |
+| Coordinated rollout | coordinated.py | consensus rollout supporting all seven strategies + heterogeneity (superset of synth_envs; M8 path untouched) |
+| Infrastructure benchmarks | infra_envs.py | distributed economic dispatch by consensus on electric power (pandapower) and gas (pandapipes) networks, plus an abstract sandbox; physics-validated feasibility |
+| Learned-model training | train_m9.py | trains GNN (supervised) + RECO (evolution strategies); reward-redistribution sample-efficiency study; saves checkpoints to models/ |
+| M9 task registry | baselines_m9.py | `family__strategy` task dispatch (consensus / rendezvous / dispatch) |
+| M9 driver | run_m9.py | resilience, cross-domain, scalability, heterogeneity, communication-efficiency experiments + figures |
+| M9 figures | analysis_m9.py | strategy-comparison, scalability, heterogeneity, comm-efficiency, sample-efficiency plots |
+
+```bash
+pip install pandapower pandapipes                # electric-power + gas network solvers (M9)
+python train_m9.py --device cpu                  # train GNN + RECO -> models/*.pt   (~6 min CPU)
+python run_m9.py --seeds 10 --infra-seeds 8 --workers 14   # full M9 comparative matrix + figures
+python tests/test_m9.py                          # M9 unit tests
+```
+
 ## Install
 
 ```bash

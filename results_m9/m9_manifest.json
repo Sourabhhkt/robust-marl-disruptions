@@ -1,0 +1,80 @@
+{
+  "name": "m9",
+  "packages": {
+    "python": "3.9.25",
+    "numpy": "1.26.4",
+    "pandas": "2.3.3",
+    "scipy": "1.13.1",
+    "networkx": "3.2.1",
+    "torch": "2.8.0+cpu",
+    "pettingzoo": "1.26.1",
+    "mpe2": "1.1.0",
+    "wntr": "1.3.2",
+    "gymnasium": "1.1.1"
+  },
+  "n_raw_rows": 4690,
+  "families": [
+    "bandwidth",
+    "byzantine",
+    "jam",
+    "latency",
+    "msg_drop",
+    "spoof"
+  ],
+  "tasks": [
+    "cons__gnn",
+    "cons__hybrid",
+    "cons__mean",
+    "cons__median",
+    "cons__oracle",
+    "cons__reco",
+    "cons__trimmed",
+    "ed_abstract__gnn",
+    "ed_abstract__hybrid",
+    "ed_abstract__mean",
+    "ed_abstract__median",
+    "ed_abstract__oracle",
+    "ed_gas__gnn",
+    "ed_gas__hybrid",
+    "ed_gas__mean",
+    "ed_gas__median",
+    "ed_gas__oracle",
+    "ed_power__gnn",
+    "ed_power__hybrid",
+    "ed_power__mean",
+    "ed_power__median",
+    "ed_power__oracle"
+  ],
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "infra_seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "strategies": [
+    "mean",
+    "median",
+    "trimmed",
+    "oracle",
+    "gnn",
+    "reco",
+    "hybrid"
+  ],
+  "wall_clock_sec": 732.3
+}

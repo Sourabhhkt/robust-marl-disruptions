@@ -15,7 +15,11 @@ networkx
 # Infrastructure benchmark (water networks). On Python 3.9 pin:
 #   pip install "wntr==1.3.2" "setuptools<80"
 #
-# Planned (not used by the current release) learned baselines would additionally need:
+# Milestone 9 physical-infrastructure benchmarks (electric power + gas networks):
+#   pip install pandapower pandapipes        # keep numpy<2 pinned
+#
+# Milestone 9 learned coordinators (graph-attention GNN, reward-redistribution
+# RECO). CPU is sufficient; GPU is used automatically if present:
 #   pip install torch --index-url https://download.pytorch.org/whl/cpu
 #
 # A fully pinned environment used for the released experiments is in
