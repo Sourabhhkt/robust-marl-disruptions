@@ -74,6 +74,9 @@ def test_physics():
     check("gas physics returns violation frac", "phys_violation_frac" in rg)
     check("power physics returns violation frac", "phys_violation_frac" in rp)
     check("clean gas feasible", rg["phys_violation_frac"] < 0.5)
+    if not rg["phys_violation_frac"] < 0.5:
+        print(f"      gas: {dict((k, v) for k, v in rg.items() if k.startswith('phys'))}")
+        print(f"      last pipe-flow error: {IE.LAST_PIPE_ERROR}")
 
 
 # ---- coordinated rollout: every strategy returns a valid record ----

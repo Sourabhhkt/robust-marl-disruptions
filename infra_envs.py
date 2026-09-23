@@ -367,6 +367,11 @@ def dispatch_consensus_rollout(
 # ============================================================
 # Physics validators (one per infrastructure domain)
 # ============================================================
+# Most recent pipe-flow failure (type and message), kept for diagnostics: the
+# validator reports any failed solve as a full violation, which would otherwise
+# hide the reason (non-convergence versus an environment or library error).
+LAST_PIPE_ERROR = None
+
 _PIPE_SPEC = {
     # domain -> (fluid, nominal slack pressure bar, minimum delivery pressure bar)
     # Compressible gas distribution. Water is covered by the established WNTR /
@@ -471,9 +476,11 @@ def _validate_pipe(prob, P, seed, domain) -> Dict[str, float]:
     inj = np.maximum(0.0, P / max(1e-6, D) * total_demand)
     for k, si in enumerate(srcs[:n]):
         net.source.at[si, "mdot_kg_per_s"] = float(inj[k])
+    global LAST_PIPE_ERROR
     try:
         ppi.pipeflow(net)
-    except (PipeflowNotConverged, Exception):
+    except (PipeflowNotConverged, Exception) as e:
+        LAST_PIPE_ERROR = f"{type(e).__name__}: {e}"
         return {"phys_violation_frac": 1.0, "phys_pmin": float("nan"),
                 "phys_pmax": float("nan"), "phys_infeasible": 1.0}
     pbar = net.res_junction.p_bar.to_numpy()
