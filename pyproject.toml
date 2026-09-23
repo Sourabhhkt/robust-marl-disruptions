@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "robust-marl-disruptions"
+version = "1.0.0"
+description = "Constraint-aware MAS/DPS benchmark and stress-test suite: communication disruptions, agent faults, adversarial interference, control-theoretic metrics, advanced and learned coordinators, physical-infrastructure benchmarks"
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.9"
+dependencies = [
+    "numpy<2",
+    "pandas",
+    "matplotlib",
+    "scipy",
+    "networkx",
+]
+
+[project.optional-dependencies]
+infra = ["pandapower>=3.0", "pandapipes>=0.12", "wntr==1.3.2"]
+learned = ["torch"]
+mpe = ["pettingzoo", "gymnasium", "mpe2"]
+all = ["pandapower>=3.0", "pandapipes>=0.12", "wntr==1.3.2", "torch",
+       "pettingzoo", "gymnasium", "mpe2"]
+
+[tool.setuptools]
+py-modules = ["core", "adapter", "env_shims", "wrapper", "synth_envs", "baselines",
+              "metrics", "runner", "analysis", "run_m8",
+              "coordinators", "coordinated", "hetero", "infra_envs", "baselines_m9",
+              "run_m9", "analysis_m9", "train_m9",
+              "coordinators_m10", "train_m10", "infra_m10", "attack_m10",
+              "combined_perturbations"]
+packages = ["marl"]

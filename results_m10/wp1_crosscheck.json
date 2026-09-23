@@ -1,0 +1,26 @@
+{
+  "task": "simple_spread (N=3, max_cycles=25)",
+  "algo": "MAPPO",
+  "inhouse_final_returns_by_seed": [
+    -25.53,
+    -22.73,
+    -25.74,
+    -24.09,
+    -23.64
+  ],
+  "inhouse_mean": -24.34,
+  "inhouse_std": 1.14,
+  "benchmarl_version": "1.5.2",
+  "benchmarl_frames": 240000,
+  "benchmarl_eval_returns": [
+    -22.61,
+    -28.26,
+    -26.41,
+    -24.05,
+    -23.07
+  ],
+  "benchmarl_final": -23.07,
+  "abs_difference": 1.27,
+  "criterion": "|diff| <= 2*inhouse_std + 2.0 = 4.28",
+  "verdict": "PASS"
+}

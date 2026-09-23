@@ -1,0 +1,172 @@
+{
+  "tag": "qmix_mpe_spread_clean_s1",
+  "algo": "qmix",
+  "env": "mpe_spread",
+  "regime": "clean",
+  "seed": 1,
+  "steps": 300000,
+  "runtime_s": 4057.8,
+  "final_disagreement": 4.1694957722332875,
+  "curve": [
+    {
+      "step": 25,
+      "final_disagreement": 4.64392621977186,
+      "return": -54.6603155048317
+    },
+    {
+      "step": 10000,
+      "final_disagreement": 3.965522150889962,
+      "return": -56.885463839488125
+    },
+    {
+      "step": 20000,
+      "final_disagreement": 2.4639119927099102,
+      "return": -39.26005719963606
+    },
+    {
+      "step": 30000,
+      "final_disagreement": 1.861310446462503,
+      "return": -40.86595193921961
+    },
+    {
+      "step": 40000,
+      "final_disagreement": 1.0767253971012325,
+      "return": -25.74823780677275
+    },
+    {
+      "step": 50000,
+      "final_disagreement": 2.181240075430974,
+      "return": -40.19302070603077
+    },
+    {
+      "step": 60000,
+      "final_disagreement": 1.2785974828667857,
+      "return": -28.36752940822485
+    },
+    {
+      "step": 70000,
+      "final_disagreement": 2.587371936095838,
+      "return": -41.077231381114785
+    },
+    {
+      "step": 80000,
+      "final_disagreement": 1.4282160505428818,
+      "return": -28.572064365206387
+    },
+    {
+      "step": 90000,
+      "final_disagreement": 3.508218754229696,
+      "return": -48.84105211744711
+    },
+    {
+      "step": 100000,
+      "final_disagreement": 3.986573784670968,
+      "return": -56.143900702121336
+    },
+    {
+      "step": 110000,
+      "final_disagreement": 2.632864034979487,
+      "return": -45.31838970725605
+    },
+    {
+      "step": 120000,
+      "final_disagreement": 2.5118571866887627,
+      "return": -45.636320089899804
+    },
+    {
+      "step": 130000,
+      "final_disagreement": 4.657831690751273,
+      "return": -58.617391627454445
+    },
+    {
+      "step": 140000,
+      "final_disagreement": 1.7082978077200743,
+      "return": -39.183578844366416
+    },
+    {
+      "step": 150000,
+      "final_disagreement": 2.707865957733555,
+      "return": -45.808835144683
+    },
+    {
+      "step": 160000,
+      "final_disagreement": 4.458553493949543,
+      "return": -53.53797489458053
+    },
+    {
+      "step": 170000,
+      "final_disagreement": 4.1568019462741574,
+      "return": -53.521555733720824
+    },
+    {
+      "step": 180000,
+      "final_disagreement": 4.3415353595211705,
+      "return": -60.85128715079643
+    },
+    {
+      "step": 190000,
+      "final_disagreement": 3.8567351974365063,
+      "return": -59.65182362058638
+    },
+    {
+      "step": 200000,
+      "final_disagreement": 4.161676422087912,
+      "return": -61.550542877239444
+    },
+    {
+      "step": 210000,
+      "final_disagreement": 5.3477014249734385,
+      "return": -64.73114708464058
+    },
+    {
+      "step": 220000,
+      "final_disagreement": 5.3477014249734385,
+      "return": -64.73114708464058
+    },
+    {
+      "step": 230000,
+      "final_disagreement": 5.3477014249734385,
+      "return": -64.73114708464058
+    },
+    {
+      "step": 240000,
+      "final_disagreement": 5.440418679601544,
+      "return": -62.902766104542025
+    },
+    {
+      "step": 250000,
+      "final_disagreement": 5.165128167524735,
+      "return": -64.03065503379781
+    },
+    {
+      "step": 260000,
+      "final_disagreement": 3.7489064421039067,
+      "return": -60.09447330372397
+    },
+    {
+      "step": 270000,
+      "final_disagreement": 3.964617905009804,
+      "return": -59.17888202228412
+    },
+    {
+      "step": 280000,
+      "final_disagreement": 4.488374411324991,
+      "return": -60.51850224430946
+    },
+    {
+      "step": 290000,
+      "final_disagreement": 4.349101004564849,
+      "return": -61.78077888018038
+    },
+    {
+      "step": 300000,
+      "final_disagreement": 4.1694957722332875,
+      "return": -60.87705865815676
+    },
+    {
+      "step": 300000,
+      "final_disagreement": 4.1694957722332875,
+      "return": -60.525044044674075
+    }
+  ]
+}

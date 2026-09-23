@@ -1,0 +1,172 @@
+{
+  "tag": "qmix_mpe_reference_disrupt_s0",
+  "algo": "qmix",
+  "env": "mpe_reference",
+  "regime": "disrupt",
+  "seed": 0,
+  "steps": 300000,
+  "runtime_s": 3496.1,
+  "final_disagreement": 1.120445810266561,
+  "curve": [
+    {
+      "step": 25,
+      "final_disagreement": 3.039311757148787,
+      "return": -43.80024784994082
+    },
+    {
+      "step": 10000,
+      "final_disagreement": 2.5849259298094087,
+      "return": -44.60674872949737
+    },
+    {
+      "step": 20000,
+      "final_disagreement": 2.461618601823795,
+      "return": -42.78082691593981
+    },
+    {
+      "step": 30000,
+      "final_disagreement": 1.9104693195178195,
+      "return": -33.54589036935932
+    },
+    {
+      "step": 40000,
+      "final_disagreement": 2.4231977588100126,
+      "return": -39.29889296813491
+    },
+    {
+      "step": 50000,
+      "final_disagreement": 1.8497751685140855,
+      "return": -35.94572735620081
+    },
+    {
+      "step": 60000,
+      "final_disagreement": 1.4443314782235295,
+      "return": -29.51619718895099
+    },
+    {
+      "step": 70000,
+      "final_disagreement": 1.2475075200038765,
+      "return": -29.688915003759092
+    },
+    {
+      "step": 80000,
+      "final_disagreement": 1.2978839075972273,
+      "return": -29.072379856131402
+    },
+    {
+      "step": 90000,
+      "final_disagreement": 1.2940334860857037,
+      "return": -27.534135921563877
+    },
+    {
+      "step": 100000,
+      "final_disagreement": 1.0115380029794707,
+      "return": -24.69424267129723
+    },
+    {
+      "step": 110000,
+      "final_disagreement": 1.0251739192366758,
+      "return": -26.625842918385672
+    },
+    {
+      "step": 120000,
+      "final_disagreement": 0.9182110423531595,
+      "return": -22.888148856130368
+    },
+    {
+      "step": 130000,
+      "final_disagreement": 0.7764384009358178,
+      "return": -24.341244001064783
+    },
+    {
+      "step": 140000,
+      "final_disagreement": 1.0103919861968342,
+      "return": -25.52246445002876
+    },
+    {
+      "step": 150000,
+      "final_disagreement": 1.03454106413632,
+      "return": -25.776196554162237
+    },
+    {
+      "step": 160000,
+      "final_disagreement": 0.8573831687075248,
+      "return": -24.315728032194787
+    },
+    {
+      "step": 170000,
+      "final_disagreement": 0.8191691047431406,
+      "return": -21.87337017578481
+    },
+    {
+      "step": 180000,
+      "final_disagreement": 1.1237300520261089,
+      "return": -25.949802141575976
+    },
+    {
+      "step": 190000,
+      "final_disagreement": 1.483310414510596,
+      "return": -30.881857649075016
+    },
+    {
+      "step": 200000,
+      "final_disagreement": 1.08119704188025,
+      "return": -27.71136542283087
+    },
+    {
+      "step": 210000,
+      "final_disagreement": 1.427003721933377,
+      "return": -26.827222500136116
+    },
+    {
+      "step": 220000,
+      "final_disagreement": 1.3343807095927613,
+      "return": -26.475546452881037
+    },
+    {
+      "step": 230000,
+      "final_disagreement": 1.3038760296085465,
+      "return": -27.138636619323137
+    },
+    {
+      "step": 240000,
+      "final_disagreement": 1.136270229119074,
+      "return": -28.083794595049476
+    },
+    {
+      "step": 250000,
+      "final_disagreement": 0.9714876738613745,
+      "return": -24.1500767702709
+    },
+    {
+      "step": 260000,
+      "final_disagreement": 1.0620720383708955,
+      "return": -27.423361873233535
+    },
+    {
+      "step": 270000,
+      "final_disagreement": 1.1337762054208729,
+      "return": -26.698523534386783
+    },
+    {
+      "step": 280000,
+      "final_disagreement": 1.381335978809614,
+      "return": -29.29317314281989
+    },
+    {
+      "step": 290000,
+      "final_disagreement": 0.8967265770034285,
+      "return": -26.814605561827545
+    },
+    {
+      "step": 300000,
+      "final_disagreement": 1.078289253993223,
+      "return": -26.79396584407642
+    },
+    {
+      "step": 300000,
+      "final_disagreement": 1.120445810266561,
+      "return": -28.64881229704887
+    }
+  ]
+}

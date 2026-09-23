@@ -1,0 +1,10 @@
+{
+  "consensus->consensus|byzantine0.25": 0.01801443971793705,
+  "consensus->consensus|msg_drop0.5": 1.4522117414961869e-05,
+  "consensus->dispatch|byzantine0.25": 4.314300083070419,
+  "consensus->dispatch|msg_drop0.5": 0.008451910927484702,
+  "dispatch->consensus|byzantine0.25": 0.02898893697366265,
+  "dispatch->consensus|msg_drop0.5": 2.7457451195493515e-05,
+  "dispatch->dispatch|byzantine0.25": 3.198501855874611,
+  "dispatch->dispatch|msg_drop0.5": 0.005317893076610902
+}

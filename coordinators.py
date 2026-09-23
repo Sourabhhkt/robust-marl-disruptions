@@ -213,7 +213,7 @@ def get_strategy(name: str):
     checkpoint once); ``hybrid`` returns the string marker handled structurally by
     the rollout."""
     name = name.lower()
-    if name in ("mean", "median", "trimmed", "hybrid"):
+    if name in ("mean", "median", "trimmed", "hybrid", "robust_oracle"):
         return name
     if name == "oracle":
         return OracleCoordinator()
@@ -221,6 +221,11 @@ def get_strategy(name: str):
         if name not in _LEARNED_CACHE:
             _LEARNED_CACHE[name] = _load_learned(name)
         return _LEARNED_CACHE[name]
+    if name in ("hetero_gnn", "hetero"):
+        import coordinators_m10 as C10
+        if "hetero_gnn" not in _LEARNED_CACHE:
+            _LEARNED_CACHE["hetero_gnn"] = C10.load_hetero_gnn()
+        return _LEARNED_CACHE["hetero_gnn"]
     raise KeyError(f"unknown strategy {name}")
 
 

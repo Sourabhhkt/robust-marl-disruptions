@@ -1,0 +1,47 @@
+{
+  "tag": "ippo_dispatch_clean_s1",
+  "algo": "ippo",
+  "env": "dispatch",
+  "regime": "clean",
+  "seed": 1,
+  "steps": 50400,
+  "runtime_s": 262.4,
+  "final_disagreement": 0.0035062315881820684,
+  "curve": [
+    {
+      "step": 800,
+      "final_disagreement": 0.0045963958905098955,
+      "return": 0.9856038654268652
+    },
+    {
+      "step": 10400,
+      "final_disagreement": 0.0038294402212031746,
+      "return": 0.9875382805763386
+    },
+    {
+      "step": 20000,
+      "final_disagreement": 0.004355736150498851,
+      "return": 0.9849701390578751
+    },
+    {
+      "step": 30400,
+      "final_disagreement": 0.0032341665982728624,
+      "return": 0.987716791298688
+    },
+    {
+      "step": 40000,
+      "final_disagreement": 0.003208754361855531,
+      "return": 0.9892887152676654
+    },
+    {
+      "step": 50400,
+      "final_disagreement": 0.0033873531319543503,
+      "return": 0.9904597875874697
+    },
+    {
+      "step": 50400,
+      "final_disagreement": 0.0035062315881820684,
+      "return": 0.9903823847123526
+    }
+  ]
+}

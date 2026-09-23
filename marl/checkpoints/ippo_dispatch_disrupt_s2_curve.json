@@ -1,0 +1,47 @@
+{
+  "tag": "ippo_dispatch_disrupt_s2",
+  "algo": "ippo",
+  "env": "dispatch",
+  "regime": "disrupt",
+  "seed": 2,
+  "steps": 50400,
+  "runtime_s": 264.4,
+  "final_disagreement": 0.023677595565470805,
+  "curve": [
+    {
+      "step": 800,
+      "final_disagreement": 0.04964587597023878,
+      "return": -1.331013268383412
+    },
+    {
+      "step": 10400,
+      "final_disagreement": 0.05177090252972515,
+      "return": -1.2959504564761724
+    },
+    {
+      "step": 20000,
+      "final_disagreement": 0.05568707852456002,
+      "return": -1.3067312676526068
+    },
+    {
+      "step": 30400,
+      "final_disagreement": 0.05997656364150873,
+      "return": -1.2745988775199275
+    },
+    {
+      "step": 40000,
+      "final_disagreement": 0.0540768757122142,
+      "return": -1.3308219847413247
+    },
+    {
+      "step": 50400,
+      "final_disagreement": 0.05090121739890889,
+      "return": -1.2530781465084513
+    },
+    {
+      "step": 50400,
+      "final_disagreement": 0.023677595565470805,
+      "return": -0.6843746677876428
+    }
+  ]
+}

@@ -1,0 +1,172 @@
+{
+  "tag": "qmix_mpe_spread_disrupt_s2",
+  "algo": "qmix",
+  "env": "mpe_spread",
+  "regime": "disrupt",
+  "seed": 2,
+  "steps": 300000,
+  "runtime_s": 4098.8,
+  "final_disagreement": 6.079229634363917,
+  "curve": [
+    {
+      "step": 25,
+      "final_disagreement": 3.368705674504857,
+      "return": -40.751694678198206
+    },
+    {
+      "step": 10000,
+      "final_disagreement": 2.3698297362328704,
+      "return": -41.05455778544016
+    },
+    {
+      "step": 20000,
+      "final_disagreement": 1.7066383059710262,
+      "return": -34.58189216586481
+    },
+    {
+      "step": 30000,
+      "final_disagreement": 1.4930197560114151,
+      "return": -39.35474374414827
+    },
+    {
+      "step": 40000,
+      "final_disagreement": 1.55056916840018,
+      "return": -34.033240380512744
+    },
+    {
+      "step": 50000,
+      "final_disagreement": 1.378271028561489,
+      "return": -29.907163171597848
+    },
+    {
+      "step": 60000,
+      "final_disagreement": 1.306319974519718,
+      "return": -28.620187536869985
+    },
+    {
+      "step": 70000,
+      "final_disagreement": 1.2523714344374661,
+      "return": -30.784849524407583
+    },
+    {
+      "step": 80000,
+      "final_disagreement": 1.8683771734583297,
+      "return": -33.23535995608867
+    },
+    {
+      "step": 90000,
+      "final_disagreement": 1.4711625143268785,
+      "return": -33.61802011197363
+    },
+    {
+      "step": 100000,
+      "final_disagreement": 2.2049535895188876,
+      "return": -37.636829815094174
+    },
+    {
+      "step": 110000,
+      "final_disagreement": 1.990030410866289,
+      "return": -37.690878039082136
+    },
+    {
+      "step": 120000,
+      "final_disagreement": 1.3422699537093745,
+      "return": -29.176905951383514
+    },
+    {
+      "step": 130000,
+      "final_disagreement": 1.376093011798595,
+      "return": -29.679044495033935
+    },
+    {
+      "step": 140000,
+      "final_disagreement": 4.017345312885754,
+      "return": -47.76516039324593
+    },
+    {
+      "step": 150000,
+      "final_disagreement": 2.63974097868582,
+      "return": -51.063939965761946
+    },
+    {
+      "step": 160000,
+      "final_disagreement": 3.8370793793283235,
+      "return": -54.46032422063737
+    },
+    {
+      "step": 170000,
+      "final_disagreement": 4.176710840010701,
+      "return": -55.50471704763669
+    },
+    {
+      "step": 180000,
+      "final_disagreement": 4.65856629160386,
+      "return": -63.25143384797025
+    },
+    {
+      "step": 190000,
+      "final_disagreement": 5.556298714263296,
+      "return": -66.12337505230781
+    },
+    {
+      "step": 200000,
+      "final_disagreement": 5.934526445277195,
+      "return": -72.0924226602606
+    },
+    {
+      "step": 210000,
+      "final_disagreement": 6.050483690191895,
+      "return": -72.99957445338642
+    },
+    {
+      "step": 220000,
+      "final_disagreement": 6.050483690191895,
+      "return": -71.8272836655918
+    },
+    {
+      "step": 230000,
+      "final_disagreement": 5.776062052547857,
+      "return": -70.0733581532991
+    },
+    {
+      "step": 240000,
+      "final_disagreement": 5.776062052547857,
+      "return": -70.0733581532991
+    },
+    {
+      "step": 250000,
+      "final_disagreement": 5.776062052547857,
+      "return": -70.0733581532991
+    },
+    {
+      "step": 260000,
+      "final_disagreement": 6.050483690191895,
+      "return": -71.2939501977212
+    },
+    {
+      "step": 270000,
+      "final_disagreement": 5.991965897850831,
+      "return": -71.9024635438419
+    },
+    {
+      "step": 280000,
+      "final_disagreement": 5.772544036133111,
+      "return": -71.1632742375448
+    },
+    {
+      "step": 290000,
+      "final_disagreement": 5.9738808182714855,
+      "return": -71.11954681668792
+    },
+    {
+      "step": 300000,
+      "final_disagreement": 5.991965897850831,
+      "return": -71.13471270041032
+    },
+    {
+      "step": 300000,
+      "final_disagreement": 6.079229634363917,
+      "return": -75.03477150251312
+    }
+  ]
+}

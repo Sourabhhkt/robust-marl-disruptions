@@ -1,0 +1,47 @@
+{
+  "tag": "maddpg_consensus_disrupt_s0",
+  "algo": "maddpg",
+  "env": "consensus",
+  "regime": "disrupt",
+  "seed": 0,
+  "steps": 50000,
+  "runtime_s": 1573.2,
+  "final_disagreement": 0.002149397452978174,
+  "curve": [
+    {
+      "step": 40,
+      "final_disagreement": 0.009684292240364665,
+      "return": 0.8376787146324258
+    },
+    {
+      "step": 10000,
+      "final_disagreement": 0.008635046128076153,
+      "return": 0.8529362555873694
+    },
+    {
+      "step": 20000,
+      "final_disagreement": 0.005514904847270404,
+      "return": 0.8588710587912175
+    },
+    {
+      "step": 30000,
+      "final_disagreement": 0.005641839541580961,
+      "return": 0.8244369358285155
+    },
+    {
+      "step": 40000,
+      "final_disagreement": 0.011276180863405504,
+      "return": 0.8684467008942318
+    },
+    {
+      "step": 50000,
+      "final_disagreement": 0.009861348387493883,
+      "return": 0.8439722078805367
+    },
+    {
+      "step": 50000,
+      "final_disagreement": 0.002149397452978174,
+      "return": 0.9181006315193401
+    }
+  ]
+}

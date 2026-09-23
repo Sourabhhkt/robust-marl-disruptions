@@ -1,0 +1,172 @@
+{
+  "tag": "qmix_mpe_spread_clean_s4",
+  "algo": "qmix",
+  "env": "mpe_spread",
+  "regime": "clean",
+  "seed": 4,
+  "steps": 300000,
+  "runtime_s": 4228.2,
+  "final_disagreement": 2.2769639536672885,
+  "curve": [
+    {
+      "step": 25,
+      "final_disagreement": 3.7997247777557313,
+      "return": -45.940417725714994
+    },
+    {
+      "step": 10000,
+      "final_disagreement": 4.297381313789414,
+      "return": -61.076086307258365
+    },
+    {
+      "step": 20000,
+      "final_disagreement": 2.9615846964027193,
+      "return": -42.47564717482911
+    },
+    {
+      "step": 30000,
+      "final_disagreement": 3.737269056187995,
+      "return": -50.36557050558546
+    },
+    {
+      "step": 40000,
+      "final_disagreement": 1.7372939053655148,
+      "return": -37.02600200727995
+    },
+    {
+      "step": 50000,
+      "final_disagreement": 1.7164428488647319,
+      "return": -41.828925859410376
+    },
+    {
+      "step": 60000,
+      "final_disagreement": 2.3869143689262096,
+      "return": -52.92182137777219
+    },
+    {
+      "step": 70000,
+      "final_disagreement": 1.0822498788509929,
+      "return": -28.808188978473233
+    },
+    {
+      "step": 80000,
+      "final_disagreement": 2.4203647950931613,
+      "return": -46.009187602079706
+    },
+    {
+      "step": 90000,
+      "final_disagreement": 1.707623870891456,
+      "return": -42.027347808151525
+    },
+    {
+      "step": 100000,
+      "final_disagreement": 3.053067695302638,
+      "return": -46.106947371267864
+    },
+    {
+      "step": 110000,
+      "final_disagreement": 1.5054134478231638,
+      "return": -31.507617290204657
+    },
+    {
+      "step": 120000,
+      "final_disagreement": 1.418226200123095,
+      "return": -30.34197876127194
+    },
+    {
+      "step": 130000,
+      "final_disagreement": 1.5786410297447269,
+      "return": -39.837022351322794
+    },
+    {
+      "step": 140000,
+      "final_disagreement": 2.1682690666149864,
+      "return": -40.18817606452946
+    },
+    {
+      "step": 150000,
+      "final_disagreement": 3.020823817489868,
+      "return": -46.38318778420136
+    },
+    {
+      "step": 160000,
+      "final_disagreement": 2.3744720755468256,
+      "return": -44.14626226058925
+    },
+    {
+      "step": 170000,
+      "final_disagreement": 2.5902373920783823,
+      "return": -45.29167432495563
+    },
+    {
+      "step": 180000,
+      "final_disagreement": 2.5902373920783823,
+      "return": -45.29167432495563
+    },
+    {
+      "step": 190000,
+      "final_disagreement": 2.5902373920783823,
+      "return": -45.29167432495563
+    },
+    {
+      "step": 200000,
+      "final_disagreement": 2.5902373920783823,
+      "return": -45.29167432495563
+    },
+    {
+      "step": 210000,
+      "final_disagreement": 2.5902373920783823,
+      "return": -45.29167432495563
+    },
+    {
+      "step": 220000,
+      "final_disagreement": 2.5902373920783823,
+      "return": -45.29167432495563
+    },
+    {
+      "step": 230000,
+      "final_disagreement": 2.5902373920783823,
+      "return": -45.29167432495563
+    },
+    {
+      "step": 240000,
+      "final_disagreement": 2.5902373920783823,
+      "return": -45.29167432495563
+    },
+    {
+      "step": 250000,
+      "final_disagreement": 2.5902373920783823,
+      "return": -45.29167432495563
+    },
+    {
+      "step": 260000,
+      "final_disagreement": 2.5902373920783823,
+      "return": -45.29167432495563
+    },
+    {
+      "step": 270000,
+      "final_disagreement": 2.5902373920783823,
+      "return": -45.29167432495563
+    },
+    {
+      "step": 280000,
+      "final_disagreement": 2.5902373920783823,
+      "return": -45.29167432495563
+    },
+    {
+      "step": 290000,
+      "final_disagreement": 2.5902373920783823,
+      "return": -45.29167432495563
+    },
+    {
+      "step": 300000,
+      "final_disagreement": 2.5902373920783823,
+      "return": -45.29167432495563
+    },
+    {
+      "step": 300000,
+      "final_disagreement": 2.2769639536672885,
+      "return": -44.615156559375365
+    }
+  ]
+}

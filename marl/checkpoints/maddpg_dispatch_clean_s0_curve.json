@@ -1,0 +1,47 @@
+{
+  "tag": "maddpg_dispatch_clean_s0",
+  "algo": "maddpg",
+  "env": "dispatch",
+  "regime": "clean",
+  "seed": 0,
+  "steps": 50000,
+  "runtime_s": 1321.2,
+  "final_disagreement": 0.021438561061193018,
+  "curve": [
+    {
+      "step": 50,
+      "final_disagreement": 0.006441177236407058,
+      "return": 0.9777931358017611
+    },
+    {
+      "step": 10000,
+      "final_disagreement": 0.012070195994653764,
+      "return": 0.9753738022265483
+    },
+    {
+      "step": 20000,
+      "final_disagreement": 0.00359217380566668,
+      "return": 0.9864898906806004
+    },
+    {
+      "step": 30000,
+      "final_disagreement": 0.01532740509506917,
+      "return": 0.9643444015822705
+    },
+    {
+      "step": 40000,
+      "final_disagreement": 0.01819149771335447,
+      "return": 0.9717335694821694
+    },
+    {
+      "step": 50000,
+      "final_disagreement": 0.015346309621777786,
+      "return": 0.9628076134823628
+    },
+    {
+      "step": 50000,
+      "final_disagreement": 0.021438561061193018,
+      "return": 0.9659906213657028
+    }
+  ]
+}

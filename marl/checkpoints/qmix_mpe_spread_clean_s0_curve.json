@@ -1,0 +1,172 @@
+{
+  "tag": "qmix_mpe_spread_clean_s0",
+  "algo": "qmix",
+  "env": "mpe_spread",
+  "regime": "clean",
+  "seed": 0,
+  "steps": 300000,
+  "runtime_s": 4209.2,
+  "final_disagreement": 5.417719383358831,
+  "curve": [
+    {
+      "step": 25,
+      "final_disagreement": 1.8784093183148372,
+      "return": -38.31193037708797
+    },
+    {
+      "step": 10000,
+      "final_disagreement": 2.920824667367253,
+      "return": -44.66313688464282
+    },
+    {
+      "step": 20000,
+      "final_disagreement": 2.559061081259145,
+      "return": -39.999922964943536
+    },
+    {
+      "step": 30000,
+      "final_disagreement": 1.8115573119150286,
+      "return": -33.29882780420735
+    },
+    {
+      "step": 40000,
+      "final_disagreement": 3.458175431105941,
+      "return": -51.18558108248904
+    },
+    {
+      "step": 50000,
+      "final_disagreement": 2.8514138750977875,
+      "return": -45.37764563848178
+    },
+    {
+      "step": 60000,
+      "final_disagreement": 3.212010784116938,
+      "return": -48.91108252802751
+    },
+    {
+      "step": 70000,
+      "final_disagreement": 2.287089069293203,
+      "return": -44.59234472749132
+    },
+    {
+      "step": 80000,
+      "final_disagreement": 1.9365025842564747,
+      "return": -40.18970503599178
+    },
+    {
+      "step": 90000,
+      "final_disagreement": 3.3512872077808264,
+      "return": -50.27011410643853
+    },
+    {
+      "step": 100000,
+      "final_disagreement": 3.780112555255788,
+      "return": -49.33422371857217
+    },
+    {
+      "step": 110000,
+      "final_disagreement": 2.6527237924824547,
+      "return": -40.81965913160424
+    },
+    {
+      "step": 120000,
+      "final_disagreement": 3.414059489361239,
+      "return": -45.54519529023916
+    },
+    {
+      "step": 130000,
+      "final_disagreement": 1.3143676044459116,
+      "return": -31.162442118314374
+    },
+    {
+      "step": 140000,
+      "final_disagreement": 3.036542989404397,
+      "return": -47.25330657603776
+    },
+    {
+      "step": 150000,
+      "final_disagreement": 5.043087474838488,
+      "return": -58.13685625569995
+    },
+    {
+      "step": 160000,
+      "final_disagreement": 5.379685193340015,
+      "return": -56.89130344731107
+    },
+    {
+      "step": 170000,
+      "final_disagreement": 5.379685193340015,
+      "return": -55.24432138996383
+    },
+    {
+      "step": 180000,
+      "final_disagreement": 3.380514251528375,
+      "return": -51.74046486259014
+    },
+    {
+      "step": 190000,
+      "final_disagreement": 5.2703791056469225,
+      "return": -58.26210906350008
+    },
+    {
+      "step": 200000,
+      "final_disagreement": 5.2703791056469225,
+      "return": -58.26210906350008
+    },
+    {
+      "step": 210000,
+      "final_disagreement": 5.2703791056469225,
+      "return": -58.26210906350008
+    },
+    {
+      "step": 220000,
+      "final_disagreement": 5.2703791056469225,
+      "return": -58.26210906350008
+    },
+    {
+      "step": 230000,
+      "final_disagreement": 5.2703791056469225,
+      "return": -58.26210906350008
+    },
+    {
+      "step": 240000,
+      "final_disagreement": 5.2703791056469225,
+      "return": -58.26210906350008
+    },
+    {
+      "step": 250000,
+      "final_disagreement": 5.2703791056469225,
+      "return": -58.26210906350008
+    },
+    {
+      "step": 260000,
+      "final_disagreement": 5.2703791056469225,
+      "return": -58.26210906350008
+    },
+    {
+      "step": 270000,
+      "final_disagreement": 5.2703791056469225,
+      "return": -58.26210906350008
+    },
+    {
+      "step": 280000,
+      "final_disagreement": 5.2703791056469225,
+      "return": -58.26210906350008
+    },
+    {
+      "step": 290000,
+      "final_disagreement": 5.2703791056469225,
+      "return": -58.26210906350008
+    },
+    {
+      "step": 300000,
+      "final_disagreement": 5.2703791056469225,
+      "return": -58.26210906350008
+    },
+    {
+      "step": 300000,
+      "final_disagreement": 5.417719383358831,
+      "return": -61.54641721274936
+    }
+  ]
+}

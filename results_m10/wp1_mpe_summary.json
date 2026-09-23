@@ -1,0 +1,62 @@
+{
+  "ippo_mpe_reference_clean": {
+    "mean": -18.988311437869548,
+    "std": 0.28880255660893644,
+    "n": 5
+  },
+  "ippo_mpe_reference_disrupt": {
+    "mean": -18.821932452909998,
+    "std": 0.35472587630501506,
+    "n": 5
+  },
+  "ippo_mpe_spread_clean": {
+    "mean": -24.622402180466565,
+    "std": 1.8420914988124588,
+    "n": 5
+  },
+  "ippo_mpe_spread_disrupt": {
+    "mean": -24.544522806724054,
+    "std": 2.3232150897502275,
+    "n": 5
+  },
+  "mappo_mpe_reference_clean": {
+    "mean": -18.90461490395537,
+    "std": 0.9180175347071075,
+    "n": 5
+  },
+  "mappo_mpe_reference_disrupt": {
+    "mean": -19.173886550158702,
+    "std": 0.5366369829705324,
+    "n": 5
+  },
+  "mappo_mpe_spread_clean": {
+    "mean": -24.344740331617118,
+    "std": 1.1413859315324613,
+    "n": 5
+  },
+  "mappo_mpe_spread_disrupt": {
+    "mean": -24.7635320721297,
+    "std": 1.5342880003614312,
+    "n": 5
+  },
+  "qmix_mpe_reference_clean": {
+    "mean": -35.83535962127077,
+    "std": 7.958756089523758,
+    "n": 5
+  },
+  "qmix_mpe_reference_disrupt": {
+    "mean": -27.099939414979367,
+    "std": 1.7382373509943714,
+    "n": 5
+  },
+  "qmix_mpe_spread_clean": {
+    "mean": -53.88188595267724,
+    "std": 6.456497777882072,
+    "n": 5
+  },
+  "qmix_mpe_spread_disrupt": {
+    "mean": -47.58933553958107,
+    "std": 19.349620542557762,
+    "n": 5
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "tag": "mappo_consensus_clean_s0",
+  "algo": "mappo",
+  "env": "consensus",
+  "regime": "clean",
+  "seed": 0,
+  "steps": 50560,
+  "runtime_s": 284.1,
+  "final_disagreement": 0.00020429660744361927,
+  "curve": [
+    {
+      "step": 640,
+      "final_disagreement": 8.085019621751248e-06,
+      "return": 0.9997384395477198
+    },
+    {
+      "step": 10240,
+      "final_disagreement": 2.2304252599718068e-05,
+      "return": 0.999476982373919
+    },
+    {
+      "step": 20480,
+      "final_disagreement": 3.521000724793188e-05,
+      "return": 0.9992977051038953
+    },
+    {
+      "step": 30080,
+      "final_disagreement": 6.723320096382925e-05,
+      "return": 0.9987544857971725
+    },
+    {
+      "step": 40320,
+      "final_disagreement": 9.230807563012647e-05,
+      "return": 0.9982320792352006
+    },
+    {
+      "step": 50560,
+      "final_disagreement": 0.000221451904321614,
+      "return": 0.9967694720425255
+    },
+    {
+      "step": 50560,
+      "final_disagreement": 0.00020429660744361927,
+      "return": 0.9957005915965302
+    }
+  ]
+}

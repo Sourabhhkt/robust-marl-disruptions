@@ -1,0 +1,47 @@
+{
+  "tag": "mappo_dispatch_disrupt_s2",
+  "algo": "mappo",
+  "env": "dispatch",
+  "regime": "disrupt",
+  "seed": 2,
+  "steps": 50400,
+  "runtime_s": 278.3,
+  "final_disagreement": 0.028622645934490456,
+  "curve": [
+    {
+      "step": 800,
+      "final_disagreement": 0.050106161697770185,
+      "return": -1.3393442563756435
+    },
+    {
+      "step": 10400,
+      "final_disagreement": 0.04717309644340849,
+      "return": -1.2182502289921482
+    },
+    {
+      "step": 20000,
+      "final_disagreement": 0.04600560308906629,
+      "return": -1.1607652195200289
+    },
+    {
+      "step": 30400,
+      "final_disagreement": 0.05114186131279577,
+      "return": -1.1192721399407937
+    },
+    {
+      "step": 40000,
+      "final_disagreement": 0.055453637714708806,
+      "return": -1.16046294712347
+    },
+    {
+      "step": 50400,
+      "final_disagreement": 0.045562703944754285,
+      "return": -1.069053862044723
+    },
+    {
+      "step": 50400,
+      "final_disagreement": 0.028622645934490456,
+      "return": -0.5564478817287766
+    }
+  ]
+}

@@ -198,6 +198,8 @@ def dispatch_consensus_rollout(
     byzantine_scale: float = 3.0,
     physics: bool = True,
     hetero_profile: Optional[Any] = None,
+    mismatch_robust: bool = False,
+    y_clip: float = 2.0,
     **_,
 ) -> Dict[str, Any]:
     """Incremental-cost consensus dispatch over an impaired communication graph.
@@ -276,8 +278,28 @@ def dispatch_consensus_rollout(
             if lam_vals:
                 # consensus combine (algorithm under test) on price + mismatch,
                 # plus the balance feedback eps * y on the price.
-                lam_mix = combine(combiner, lam[j], lam_vals, float(W[j, j]), w_neighbors)
-                y_mix = combine(combiner, y[j], y_vals, float(W[j, j]), w_neighbors)
+                if mismatch_robust:
+                    # WP2b: Byzantine-robust mismatch estimator. A Byzantine agent
+                    # corrupts BOTH its price and its mismatch message, so a price
+                    # that is a gross outlier from the robust price estimate flags
+                    # the source; we drop that source's mismatch and clip the rest
+                    # to a plausible bound before a median combine. This protects
+                    # the balance estimator that M9 found robust price aggregation
+                    # alone did not.
+                    lam_med = float(np.median(lam_vals))
+                    mad = float(np.median(np.abs(np.asarray(lam_vals) - lam_med))) + 1e-6
+                    keep_l, keep_y, keep_w = [], [], []
+                    for lv, yv, wv in zip(lam_vals, y_vals, w_neighbors):
+                        if abs(lv - lam_med) <= 4.0 * mad:        # price-consistency gate
+                            keep_l.append(lv)
+                            keep_y.append(float(np.clip(yv, - y_clip, y_clip)))
+                            keep_w.append(wv)
+                    lv_use, yv_use, wv_use = (keep_l or lam_vals), (keep_y or y_vals), (keep_w or w_neighbors)
+                    lam_mix = combine(combiner, lam[j], lv_use, float(W[j, j]), wv_use)
+                    y_mix = combine("median", y[j], yv_use, float(W[j, j]), wv_use)
+                else:
+                    lam_mix = combine(combiner, lam[j], lam_vals, float(W[j, j]), w_neighbors)
+                    y_mix = combine(combiner, y[j], y_vals, float(W[j, j]), w_neighbors)
                 lam_new[j] = lam_mix + eps_balance * y[j]
                 y_new[j] = y_mix
         lam = lam_new

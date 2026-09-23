@@ -32,7 +32,7 @@ def _resolve_aggregator(strategy: Any):
     if isinstance(strategy, str):
         if strategy in B.AGGREGATORS:
             return B.AGGREGATORS[strategy], None
-        if strategy in ("oracle", "hybrid"):
+        if strategy in ("oracle", "hybrid", "robust_oracle"):
             return None, strategy
         raise KeyError(f"unknown strategy {strategy}")
     if isinstance(strategy, C.OracleCoordinator):
@@ -57,6 +57,7 @@ def coordinated_consensus_rollout(
     byzantine_frac: float = 0.0,
     byzantine_scale: float = 3.0,
     byz_attack: str = "gauss",
+    byz_params: tuple = (3.0, 0.0),
     task: str = "consensus",
     hetero_profile: Optional[HeteroProfile] = None,
     n_clusters: Optional[int] = None,
@@ -79,7 +80,7 @@ def coordinated_consensus_rollout(
     # --- hybrid MAS+DPS: cluster the graph, restrict edges to intra-cluster +
     #     leader-to-leader, and flag leaders for inter-cluster carry. ---
     cluster = None
-    if marker == "hybrid":
+    if marker in ("hybrid", "robust_oracle"):
         k = n_clusters or max(2, int(round(np.sqrt(n))))
         cluster, leaders = C.hybrid_clusters(adj, k)
         leader_of = {c: leaders[c] for c in range(len(leaders))}
@@ -97,7 +98,12 @@ def coordinated_consensus_rollout(
         adj = hadj
         prof = HeteroProfile(prof.gain_scale, prof.reliability, prof.precision_bits,
                              np.isin(np.arange(n), leaders))
-        aggregator = B.AGGREGATORS["mean"]      # hybrid uses mean within structure
+        # 'hybrid' uses mean within the structure; 'robust_oracle' (WP2c) is a
+        # deployable approximation of the M9 oracle: it pairs the same hierarchy
+        # (connectivity, replacing the oracle's global query) with trimmed-mean
+        # aggregation (robustness, replacing the oracle's idealized honest-set
+        # filter), so it needs neither a global view nor knowledge of who is honest.
+        aggregator = B.AGGREGATORS["trimmed" if marker == "robust_oracle" else "mean"]
 
     nbrs = [list(np.where(adj[i] > 0)[0]) for i in range(n)]
 
@@ -180,6 +186,11 @@ def coordinated_consensus_rollout(
                     payload = X[i].copy() + byzantine_scale          # stealthy constant offset
                 elif byz_attack == "signflip":
                     payload = -byzantine_scale * X[i].copy()         # negated, amplified
+                elif byz_attack == "param":
+                    # parametrized attack for the WP3 worst-case search:
+                    # payload = bias + slope * own_state (a linear adversary the
+                    # optimizer tunes to maximize team disagreement).
+                    payload = byz_params[0] + byz_params[1] * X[i].copy()
                 else:
                     payload = env_rng.normal(0.0, byzantine_scale, size=d)
             else:
@@ -201,19 +212,28 @@ def coordinated_consensus_rollout(
                 continue
             got = channel.recv_all(agents[j], t, dim=d, agents=agents)
             targets: List[np.ndarray] = []
+            quality: List[List[float]] = []   # per-neighbor [age, reliability, precision]
             for src, (payload, meta) in got.items():
                 comm.on_recv(payload, meta)
                 if meta["status"] in DELIVERED_STATUSES:
                     v = np.asarray(fm.transform_observation(agents[j], payload, t),
                                    dtype=float).reshape(-1)[:d]
+                    si = int(src)
                     if offsets is not None:
-                        si = int(src)
                         v = v - (offsets[si] - offsets[j])
                     targets.append(v)
-                    si = int(src)
+                    # observable/advertised link quality of the source
+                    age = float(meta.get("age", 0))
+                    rel = float(prof.reliability[si])
+                    pb = float(prof.precision_bits[si])
+                    prec = 1.0 if pb <= 0 else min(1.0, pb / 8.0)
+                    quality.append([age / 10.0, rel, prec])
                     eff[j, si] = 1.0; eff[si, j] = 1.0
             if targets:
-                g = np.asarray(aggregator(X[j], targets), dtype=float).reshape(-1)[:d]
+                if getattr(aggregator, "needs_quality", False):
+                    g = np.asarray(aggregator(X[j], targets, quality), dtype=float).reshape(-1)[:d]
+                else:
+                    g = np.asarray(aggregator(X[j], targets), dtype=float).reshape(-1)[:d]
                 newX[j] = X[j] + step_size * float(prof.gain_scale[j]) * (g - X[j])
         X = newX
         V.append(lyap(X)); eff_adjs.append(eff)

@@ -1,0 +1,172 @@
+{
+  "tag": "ippo_mpe_spread_clean_s3",
+  "algo": "ippo",
+  "env": "mpe_spread",
+  "regime": "clean",
+  "seed": 3,
+  "steps": 300000,
+  "runtime_s": 579.3,
+  "final_disagreement": 0.929424627545929,
+  "curve": [
+    {
+      "step": 400,
+      "final_disagreement": 1.4830147287837576,
+      "return": -32.79527479841765
+    },
+    {
+      "step": 10000,
+      "final_disagreement": 0.8133208846825339,
+      "return": -23.58159716175116
+    },
+    {
+      "step": 20000,
+      "final_disagreement": 1.3087958053390882,
+      "return": -27.880793019412533
+    },
+    {
+      "step": 30000,
+      "final_disagreement": 1.8755979417692465,
+      "return": -35.95649383255979
+    },
+    {
+      "step": 40000,
+      "final_disagreement": 3.2229191031644273,
+      "return": -40.35356032865398
+    },
+    {
+      "step": 50000,
+      "final_disagreement": 1.3847248615507244,
+      "return": -37.25467741689033
+    },
+    {
+      "step": 60000,
+      "final_disagreement": 1.5121491929380095,
+      "return": -39.13058060645232
+    },
+    {
+      "step": 70000,
+      "final_disagreement": 1.9341170609738798,
+      "return": -45.152561901794776
+    },
+    {
+      "step": 80000,
+      "final_disagreement": 4.810927719467163,
+      "return": -56.98138962319592
+    },
+    {
+      "step": 90000,
+      "final_disagreement": 3.614016499791977,
+      "return": -47.935078061830886
+    },
+    {
+      "step": 100000,
+      "final_disagreement": 1.7601887175258146,
+      "return": -37.462841609908736
+    },
+    {
+      "step": 110000,
+      "final_disagreement": 1.5891420618201426,
+      "return": -35.3218983062962
+    },
+    {
+      "step": 120000,
+      "final_disagreement": 1.3165064094467651,
+      "return": -31.14731324022385
+    },
+    {
+      "step": 130000,
+      "final_disagreement": 1.2676304253473565,
+      "return": -30.479178237492597
+    },
+    {
+      "step": 140000,
+      "final_disagreement": 1.21634427428615,
+      "return": -29.47944875103214
+    },
+    {
+      "step": 150000,
+      "final_disagreement": 1.124340610644851,
+      "return": -27.392564365089235
+    },
+    {
+      "step": 160000,
+      "final_disagreement": 1.1730767481534716,
+      "return": -28.26440975118701
+    },
+    {
+      "step": 170000,
+      "final_disagreement": 1.1538274965406465,
+      "return": -29.494976120775494
+    },
+    {
+      "step": 180000,
+      "final_disagreement": 1.1578733042320037,
+      "return": -29.719289260647123
+    },
+    {
+      "step": 190000,
+      "final_disagreement": 1.0037010398921133,
+      "return": -26.729060626014764
+    },
+    {
+      "step": 200000,
+      "final_disagreement": 1.0772117379228856,
+      "return": -26.13155584009302
+    },
+    {
+      "step": 210000,
+      "final_disagreement": 1.3116554977403683,
+      "return": -27.27933185188537
+    },
+    {
+      "step": 220000,
+      "final_disagreement": 1.1857258125209231,
+      "return": -28.184192434899558
+    },
+    {
+      "step": 230000,
+      "final_disagreement": 1.0228268717698912,
+      "return": -27.574060782321602
+    },
+    {
+      "step": 240000,
+      "final_disagreement": 1.3321477292667012,
+      "return": -26.307542370461583
+    },
+    {
+      "step": 250000,
+      "final_disagreement": 1.0269621097039783,
+      "return": -25.674326799025856
+    },
+    {
+      "step": 260000,
+      "final_disagreement": 1.0418793161531625,
+      "return": -25.32073294927336
+    },
+    {
+      "step": 270000,
+      "final_disagreement": 1.0349031374915514,
+      "return": -25.75428532459997
+    },
+    {
+      "step": 280000,
+      "final_disagreement": 0.8983874953728839,
+      "return": -24.981235181321363
+    },
+    {
+      "step": 290000,
+      "final_disagreement": 0.7202342370893329,
+      "return": -21.69225711683598
+    },
+    {
+      "step": 300000,
+      "final_disagreement": 0.9451034609415991,
+      "return": -23.46673679671249
+    },
+    {
+      "step": 300000,
+      "final_disagreement": 0.929424627545929,
+      "return": -23.056200314333324
+    }
+  ]
+}

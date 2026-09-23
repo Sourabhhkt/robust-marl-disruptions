@@ -1,0 +1,72 @@
+{
+  "clean": {
+    "accuracy": 0.92,
+    "episodes": 300,
+    "sent": 300,
+    "delivered": 300,
+    "dropped": 0,
+    "spoofed": 0,
+    "truncated": 0,
+    "delayed": 0
+  },
+  "drop_0.3": {
+    "accuracy": 0.7466666666666667,
+    "episodes": 300,
+    "sent": 300,
+    "delivered": 224,
+    "dropped": 76,
+    "spoofed": 0,
+    "truncated": 0,
+    "delayed": 0
+  },
+  "drop_0.6": {
+    "accuracy": 0.53,
+    "episodes": 300,
+    "sent": 300,
+    "delivered": 136,
+    "dropped": 164,
+    "spoofed": 0,
+    "truncated": 0,
+    "delayed": 0
+  },
+  "truncate_4tok": {
+    "accuracy": 0.20666666666666667,
+    "episodes": 300,
+    "sent": 300,
+    "delivered": 300,
+    "dropped": 0,
+    "spoofed": 0,
+    "truncated": 300,
+    "delayed": 0
+  },
+  "truncate_2tok": {
+    "accuracy": 0.20666666666666667,
+    "episodes": 300,
+    "sent": 300,
+    "delivered": 300,
+    "dropped": 0,
+    "spoofed": 0,
+    "truncated": 300,
+    "delayed": 0
+  },
+  "latency_2": {
+    "accuracy": 0.19666666666666666,
+    "episodes": 300,
+    "sent": 300,
+    "delivered": 299,
+    "dropped": 0,
+    "spoofed": 0,
+    "truncated": 0,
+    "delayed": 300
+  },
+  "spoof_0.3": {
+    "accuracy": 0.7233333333333334,
+    "episodes": 300,
+    "sent": 300,
+    "delivered": 300,
+    "dropped": 0,
+    "spoofed": 86,
+    "truncated": 0,
+    "delayed": 0
+  }
+}

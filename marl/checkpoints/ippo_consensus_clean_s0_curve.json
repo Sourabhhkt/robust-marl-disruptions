@@ -1,0 +1,47 @@
+{
+  "tag": "ippo_consensus_clean_s0",
+  "algo": "ippo",
+  "env": "consensus",
+  "regime": "clean",
+  "seed": 0,
+  "steps": 50560,
+  "runtime_s": 275.2,
+  "final_disagreement": 1.4589087048749707e-05,
+  "curve": [
+    {
+      "step": 640,
+      "final_disagreement": 9.54849046567103e-06,
+      "return": 0.9997602032996411
+    },
+    {
+      "step": 10240,
+      "final_disagreement": 8.034716793887007e-06,
+      "return": 0.9998005158110159
+    },
+    {
+      "step": 20480,
+      "final_disagreement": 1.0003716249289246e-05,
+      "return": 0.999779956917307
+    },
+    {
+      "step": 30080,
+      "final_disagreement": 9.806938598745396e-06,
+      "return": 0.9997474673982689
+    },
+    {
+      "step": 40320,
+      "final_disagreement": 1.0053442677740183e-05,
+      "return": 0.9997527488903956
+    },
+    {
+      "step": 50560,
+      "final_disagreement": 2.2900978117448585e-05,
+      "return": 0.9995318244607121
+    },
+    {
+      "step": 50560,
+      "final_disagreement": 1.4589087048749707e-05,
+      "return": 0.9993157204306364
+    }
+  ]
+}
